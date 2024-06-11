@@ -8,10 +8,10 @@
     <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-auth-compat.js"></script>
     <link rel="stylesheet" href="style.css">
-    <img src="https://assets.softr-files.com/applications/5161fb19-ec3f-4962-b3b7-49c68eba0c5f/assets/25fa525f-cf79-4907-8efe-c0ed02c3bdde.png" alt="Logo">
 </head>
 <body>
-    <header>   
+    <header>
+        <img src="https://assets.softr-files.com/applications/5161fb19-ec3f-4962-b3b7-49c68eba0c5f/assets/25fa525f-cf79-4907-8efe-c0ed02c3bdde.png" alt="Logo">
         <h1>Support Team Chat</h1>
         <h2 id="notification" style="display: none;"></h2>
     </header>
@@ -159,13 +159,14 @@
                 document.getElementById('login').style.display = 'none'; // Hide login form
                 document.getElementById('chat').style.display = 'block'; // Show chat interface
                 loadSenders(); // Load senders
-                // Listen for new senders
+                // Listen for new messages
                 db.collectionGroup('messages').onSnapshot(function(snapshot) {
                     snapshot.docChanges().forEach(function(change) {
                         if (change.type === 'added') {
                             var newMessage = change.doc.data();
-                            if (!viewedMessages[newMessage.sender]) {
-                                showNotification('New message from ' + newMessage.sender + ': ' + newMessage.message);
+                            var sender = newMessage.sender;
+                            if (!viewedMessages[sender]) {
+                                showNotification('New message from ' + sender + ': ' + newMessage.message);
                             }
                         }
                     });
@@ -197,13 +198,14 @@
                 document.getElementById('login').style.display = 'none'; // Hide login form
                 document.getElementById('chat').style.display = 'block'; // Show chat interface
                 loadSenders(); // Load senders
-                // Listen for new senders
+                // Listen for new messages
                 db.collectionGroup('messages').onSnapshot(function(snapshot) {
                     snapshot.docChanges().forEach(function(change) {
                         if (change.type === 'added') {
                             var newMessage = change.doc.data();
-                            if (!viewedMessages[newMessage.sender]) {
-                                showNotification('New message from ' + newMessage.sender + ': ' + newMessage.message);
+                            var sender = newMessage.sender;
+                            if (!viewedMessages[sender]) {
+                                showNotification('New message from ' + sender + ': ' + newMessage.message);
                             }
                         }
                     });
