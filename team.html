@@ -7,15 +7,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-auth-compat.js"></script>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <img src="logo.png" alt="Logo">
-        <h1>Support Team Chat</h1>
-        <h2 id="notification" style="display: none;"></h2>
-    </header>
-    
     <div id="customers">
         <select id="customerSelect" onchange="loadCustomerChat()">
             <option value="" selected disabled>Select Customer</option>
@@ -26,7 +19,6 @@
         <div id="messages"></div>
         <input type="text" id="messageInput" placeholder="Type your message">
         <button onclick="sendMessage()">Send</button>
-        <button onclick="clearMessages()">Clear Messages</button>
         <button onclick="logout()">Logout</button>
     </div>
 
@@ -50,16 +42,6 @@
 
         // Get a reference to Firestore
         var db = firebase.firestore();
-
-        // Function to show notification
-        function showNotification(message) {
-            var notificationElement = document.getElementById('notification');
-            notificationElement.innerText = message;
-            notificationElement.style.display = 'block';
-            setTimeout(() => {
-                notificationElement.style.display = 'none';
-            }, 5000);
-        }
 
         // Function to load senders in the dropdown
         function loadSenders() {
@@ -122,26 +104,6 @@
             }
         }
 
-        // Function to clear all messages for the selected sender
-        function clearMessages() {
-            var sender = document.getElementById('customerSelect').value;
-            if (sender) {
-                var confirmClear = confirm("Are you sure you want to clear all messages for this sender?");
-                if (confirmClear) {
-                    db.collection('customers').doc(sender).collection('messages').get().then(function(querySnapshot) {
-                        querySnapshot.forEach(function(doc) {
-                            doc.ref.delete();
-                        });
-                        console.log('All messages for sender ' + sender + ' cleared successfully.');
-                    }).catch(function(error) {
-                        console.error('Error clearing messages:', error);
-                    });
-                }
-            } else {
-                alert("Please select a sender first.");
-            }
-        }
-
         // Function to handle user login
         function login() {
             var email = document.getElementById('email').value;
@@ -154,15 +116,6 @@
                 document.getElementById('login').style.display = 'none'; // Hide login form
                 document.getElementById('chat').style.display = 'block'; // Show chat interface
                 loadSenders(); // Load senders
-                // Listen for new senders
-                db.collectionGroup('messages').onSnapshot(function(snapshot) {
-                    snapshot.docChanges().forEach(function(change) {
-                        if (change.type === 'added') {
-                            showNotification('New sender or message received!');
-                            loadSenders(); // Reload senders if there's a new sender
-                        }
-                    });
-                });
             })
             .catch((error) => {
                 var errorCode = error.code;
@@ -189,15 +142,6 @@
                 document.getElementById('login').style.display = 'none'; // Hide login form
                 document.getElementById('chat').style.display = 'block'; // Show chat interface
                 loadSenders(); // Load senders
-                // Listen for new senders
-                db.collectionGroup('messages').onSnapshot(function(snapshot) {
-                    snapshot.docChanges().forEach(function(change) {
-                        if (change.type === 'added') {
-                            showNotification('New sender or message received!');
-                            loadSenders(); // Reload senders if there's a new sender
-                        }
-                    });
-                });
             } else {
                 console.log('No user is signed in');
                 document.getElementById('login').style.display = 'block'; // Show login form
@@ -207,3 +151,4 @@
     </script>
 </body>
 </html>
+
