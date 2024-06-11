@@ -1,0 +1,75 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css"> <!-- Link to external CSS file -->
+    <img src="https://assets.softr-files.com/applications/5161fb19-ec3f-4962-b3b7-49c68eba0c5f/assets/25fa525f-cf79-4907-8efe-c0ed02c3bdde.png" alt="Logo">
+    <h1>Welcome to Pautangina Customer Support</h1> <!-- Add your title here -->
+    <h2>Talk to Ina! She will respond to all of your queries!</h2>
+    <title>Talk to Ina</title>
+    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div id="chat" style="display: none;">
+        <div id="messages"></div>
+        <input type="text" id="messageInput" placeholder="Type your message">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        // Initialize Firebase
+        var firebaseConfig = {
+            apiKey: "AIzaSyDQkaU837sJGrzf2O61l1tj8BR8j0nKLcs",
+            authDomain: "talk-to-ina.firebaseapp.com",
+            projectId: "talk-to-ina",
+            storageBucket: "talk-to-ina.appspot.com",
+            messagingSenderId: "281486923018",
+            appId: "1:281486923018:web:d4a73f5231d8de0a0396f3"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        // Get a reference to Firestore
+        var db = firebase.firestore();
+
+        // Clear user's name from localStorage on page load
+        localStorage.removeItem('userName');
+
+        // Prompt user for name
+        var userName = prompt("Please enter your name:");
+        localStorage.setItem('userName', userName);
+
+        // Define the sendMessage function
+        function sendMessage() {
+            var messageInput = document.getElementById('messageInput');
+            var message = messageInput.value;
+            if (message.trim() !== '') {
+                db.collection('customers').doc(userName).collection('messages').add({
+                    sender: userName,
+                    message: message,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                messageInput.value = '';
+            }
+        }
+
+        // Listen for new messages for this customer
+        function listenToMessages(name) {
+            db.collection('customers').doc(name).collection('messages').orderBy('timestamp').onSnapshot(function(snapshot) {
+                document.getElementById('messages').innerHTML = '';
+                snapshot.forEach(function(doc) {
+                    var message = doc.data();
+                    var messageElement = document.createElement('div');
+                    messageElement.innerText = message.sender + ': ' + message.message;
+                    document.getElementById('messages').appendChild(messageElement);
+                });
+            });
+        }
+
+        // Show chat interface and start listening for messages
+        document.getElementById('chat').style.display = 'block';
+        listenToMessages(userName);
+    </script>
+</body>
+</html>
