@@ -11,7 +11,7 @@
     <img src="https://assets.softr-files.com/applications/5161fb19-ec3f-4962-b3b7-49c68eba0c5f/assets/25fa525f-cf79-4907-8efe-c0ed02c3bdde.png" alt="Logo">
 </head>
 <body>
-    <header>
+    <header>   
         <h1>Support Team Chat</h1>
         <h2 id="notification" style="display: none;"></h2>
     </header>
@@ -53,6 +53,9 @@
         // Get a reference to Firestore
         var db = firebase.firestore();
 
+        // Track viewed messages
+        var viewedMessages = {};
+
         // Function to show notification
         function showNotification(message) {
             var notificationElement = document.getElementById('notification');
@@ -89,6 +92,7 @@
             if (sender) {
                 var messagesDiv = document.getElementById('messages');
                 messagesDiv.innerHTML = ''; // Clear previous messages
+                viewedMessages[sender] = true; // Mark as viewed
                 db.collection('customers').doc(sender).collection('messages').orderBy('timestamp').onSnapshot(function(snapshot) {
                     messagesDiv.innerHTML = '';
                     snapshot.forEach(function(doc) {
@@ -160,7 +164,9 @@
                     snapshot.docChanges().forEach(function(change) {
                         if (change.type === 'added') {
                             var newMessage = change.doc.data();
-                            showNotification('New message from ' + newMessage.sender + ': ' + newMessage.message);
+                            if (!viewedMessages[newMessage.sender]) {
+                                showNotification('New message from ' + newMessage.sender + ': ' + newMessage.message);
+                            }
                         }
                     });
                 });
@@ -178,6 +184,7 @@
                 console.log('User logged out');
                 document.getElementById('login').style.display = 'block'; // Show login form
                 document.getElementById('chat').style.display = 'none'; // Hide chat interface
+                viewedMessages = {}; // Clear viewed messages
             }).catch(function(error) {
                 console.error('Logout error:', error);
             });
@@ -195,8 +202,7 @@
                     snapshot.docChanges().forEach(function(change) {
                         if (change.type === 'added') {
                             var newMessage = change.doc.data();
-                            var sender = document.getElementById('customerSelect').value;
-                            if (sender !== newMessage.sender) {
+                            if (!viewedMessages[newMessage.sender]) {
                                 showNotification('New message from ' + newMessage.sender + ': ' + newMessage.message);
                             }
                         }
