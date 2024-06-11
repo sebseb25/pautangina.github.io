@@ -36,6 +36,8 @@
         <button onclick="login()">Login</button>
     </div>
 
+    <audio id="notificationSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+
     <script>
         // Initialize Firebase
         var firebaseConfig = {
@@ -56,9 +58,7 @@
             var notificationElement = document.getElementById('notification');
             notificationElement.innerText = message;
             notificationElement.style.display = 'block';
-            setTimeout(() => {
-                notificationElement.style.display = 'none';
-            }, 5000);
+            document.getElementById('notificationSound').play();
         }
 
         // Function to load senders in the dropdown
@@ -98,6 +98,8 @@
                         messageElement.innerText = messageSender + ': ' + message.message;
                         messagesDiv.appendChild(messageElement);
                     });
+                    // Clear notification if messages are loaded for the current sender
+                    document.getElementById('notification').style.display = 'none';
                 });
             }
         }
