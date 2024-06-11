@@ -195,7 +195,10 @@
                     snapshot.docChanges().forEach(function(change) {
                         if (change.type === 'added') {
                             var newMessage = change.doc.data();
-                            showNotification('New message from ' + newMessage.sender + ': ' + newMessage.message);
+                            var sender = document.getElementById('customerSelect').value;
+                            if (sender !== newMessage.sender) {
+                                showNotification('New message from ' + newMessage.sender + ': ' + newMessage.message);
+                            }
                         }
                     });
                 });
