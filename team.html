@@ -65,14 +65,13 @@
         function loadSenders() {
             console.log('Loading senders...');
             var customerSelect = document.getElementById('customerSelect');
-            customerSelect.innerHTML = '<option value="" selected disabled>Select Sender</option>';
             db.collectionGroup('messages').get().then(function(querySnapshot) {
-                console.log('Senders fetched:', querySnapshot.size);
                 var senders = new Set(); // Using a Set to avoid duplicate senders
                 querySnapshot.forEach(function(doc) {
                     var sender = doc.data().sender;
                     senders.add(sender);
                 });
+                customerSelect.innerHTML = '<option value="" selected disabled>Select Sender</option>';
                 senders.forEach(function(sender) {
                     var option = document.createElement('option');
                     option.value = sender;
@@ -158,8 +157,8 @@
                 db.collectionGroup('messages').onSnapshot(function(snapshot) {
                     snapshot.docChanges().forEach(function(change) {
                         if (change.type === 'added') {
-                            showNotification('New sender or message received!');
-                            loadSenders(); // Reload senders if there's a new sender
+                            var newMessage = change.doc.data();
+                            showNotification('New message from ' + newMessage.sender + ': ' + newMessage.message);
                         }
                     });
                 });
@@ -193,8 +192,8 @@
                 db.collectionGroup('messages').onSnapshot(function(snapshot) {
                     snapshot.docChanges().forEach(function(change) {
                         if (change.type === 'added') {
-                            showNotification('New sender or message received!');
-                            loadSenders(); // Reload senders if there's a new sender
+                            var newMessage = change.doc.data();
+                            showNotification('New message from ' + newMessage.sender + ': ' + newMessage.message);
                         }
                     });
                 });
