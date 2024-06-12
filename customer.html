@@ -12,64 +12,18 @@
     <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-    <div id="chat" style="display: none;">
-        <div id="messages"></div>
-        <input type="text" id="messageInput" placeholder="Type your message">
-        <button onclick="sendMessage()">Send</button>
-    </div>
-
-    <script>
-        // Initialize Firebase
-        var firebaseConfig = {
-            apiKey: "AIzaSyDQkaU837sJGrzf2O61l1tj8BR8j0nKLcs",
-            authDomain: "talk-to-ina.firebaseapp.com",
-            projectId: "talk-to-ina",
-            storageBucket: "talk-to-ina.appspot.com",
-            messagingSenderId: "281486923018",
-            appId: "1:281486923018:web:d4a73f5231d8de0a0396f3"
-        };
-        firebase.initializeApp(firebaseConfig);
-
-        // Get a reference to Firestore
-        var db = firebase.firestore();
-
-        // Clear user's name from localStorage on page load
-        localStorage.removeItem('userName');
-
-        // Prompt user for name
-        var userName = prompt("Please enter your name:");
-        localStorage.setItem('userName', userName);
-
-        // Define the sendMessage function
-        function sendMessage() {
-            var messageInput = document.getElementById('messageInput');
-            var message = messageInput.value;
-            if (message.trim() !== '') {
-                db.collection('customers').doc(userName).collection('messages').add({
-                    sender: userName,
-                    message: message,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                messageInput.value = '';
-            }
-        }
-
-        // Listen for new messages for this customer
-        function listenToMessages(name) {
-            db.collection('customers').doc(name).collection('messages').orderBy('timestamp').onSnapshot(function(snapshot) {
-                document.getElementById('messages').innerHTML = '';
-                snapshot.forEach(function(doc) {
-                    var message = doc.data();
-                    var messageElement = document.createElement('div');
-                    messageElement.innerText = message.sender + ': ' + message.message;
-                    document.getElementById('messages').appendChild(messageElement);
-                });
-            });
-        }
-
-        // Show chat interface and start listening for messages
-        document.getElementById('chat').style.display = 'block';
-        listenToMessages(userName);
-    </script>
+    <!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/666956e89a809f19fb3cb16a/1i05nmvhq';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
 </body>
 </html>
