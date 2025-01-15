@@ -8,30 +8,49 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            color: #333;
+        }
+        h1 {
+            font-size: 2em;
+            color: #2c3e50;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: #34495e;
         }
         label {
             display: block;
             margin-top: 10px;
+            font-size: 1.1em;
+        }
+        select, input, button {
+            font-size: 1em;
+            margin-top: 5px;
+            padding: 5px;
+        }
+        button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #3498db;
         }
         .result {
             margin-top: 20px;
             font-weight: bold;
+            font-size: 1.2em;
+            color: #27ae60;
         }
     </style>
 </head>
 <body>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css"> <!-- Link to external CSS file -->
-    <img src="https://assets.softr-files.com/applications/5161fb19-ec3f-4962-b3b7-49c68eba0c5f/assets/25fa525f-cf79-4907-8efe-c0ed02c3bdde.png" alt="Logo">
-    <h1>Pautangina Loan Calculator</h1> <!-- Add your title here -->
-    <h2>Not sure about your loan? Feel free to use our loan calculator</h2>
-    <title>Talk to Ina</title>
-    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore-compat.js"></script>
-</head>
-<body>
+    <h1>Loan Calculator</h1>
+    <h2>Not sure how much to pay? Use our calculator!</h2>
+
     <label for="loanType">Select Loan Type:</label>
     <select id="loanType">
         <option value="salary">Salary Loan</option>
