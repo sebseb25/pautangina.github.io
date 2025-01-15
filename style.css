@@ -11,14 +11,14 @@ h1 {
     color: #D9AE6A;
     font-size: 36px;
     font-weight: bold;
-    margin: 20px 0;
+    margin-left: 10px;
 }
 
 h2 {
     color: #D9AE6A;
     font-size: 24px;
     font-weight: normal;
-    margin: 10px 0;
+    margin-left: 10px;
 }
 
 /* Chat container */
