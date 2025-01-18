@@ -119,8 +119,8 @@
       checkoutModal.style.display = 'block';
     }
 
-    // Checkout and save to database
-    function checkout() {
+    // Expose the checkout function to the global scope
+    window.checkout = function() {
       const user = auth.currentUser;
 
       if (!user) {
@@ -145,7 +145,7 @@
         .catch(error => {
           console.error('Error placing order:', error);
         });
-    }
+    };
 
     // Sign out function (renamed to handleSignOut)
     function handleSignOut() {
