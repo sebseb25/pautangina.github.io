@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Listing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Available Products for Loan</h1>
+
+  <div id="product-list">
+    <!-- Example Product 1 -->
+    <div class="product" data-id="1">
+      <h2>Product 1</h2>
+      <p>Price: $200</p>
+      <button onclick="addToCart(1, 'Product 1', 200)">Add to Cart</button>
+    </div>
+    <!-- Example Product 2 -->
+    <div class="product" data-id="2">
+      <h2>Product 2</h2>
+      <p>Price: $350</p>
+      <button onclick="addToCart(2, 'Product 2', 350)">Add to Cart</button>
+    </div>
+    <!-- Add more products here -->
+  </div>
+
+  <!-- Cart Icon -->
+  <div id="cart">
+    <span id="cart-icon">🛒</span>
+    <span id="cart-count">0</span>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" style="display:none;">
+    <h3>Checkout</h3>
+    <ul id="cart-items"></ul>
+    <p id="total-price">Total: $0</p>
+    <button onclick="checkout()">Submit</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+  <script>
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6WHRzPz5kpF39K0U-RwB6Q-8DySMJ0uM",
+      authDomain: "pautangina-6f0ab.firebaseapp.com",
+      projectId: "pautangina-6f0ab",
+      storageBucket: "pautangina-6f0ab.firebasestorage.app",
+      messagingSenderId: "981514614207",
+      appId: "1:981514614207:web:ad7f106d68991920ff5d0a",
+      measurementId: "G-99917HK00J"
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    let cart = [];
+
+    // Add product to cart
+    function addToCart(productId, productName, productPrice) {
+      const product = { productId, productName, productPrice };
+      cart.push(product);
+      updateCartDisplay();
+    }
+
+    // Update the cart display (cart count and checkout button)
+    function updateCartDisplay() {
+      const cartCount = document.getElementById('cart-count');
+      const cartIcon = document.getElementById('cart-icon');
+      cartCount.textContent = cart.length;
+      cartIcon.addEventListener('click', openCheckoutModal);
+    }
+
+    // Open checkout modal
+    function openCheckoutModal() {
+      const checkoutModal = document.getElementById('checkout-modal');
+      const cartItems = document.getElementById('cart-items');
+      const totalPrice = document.getElementById('total-price');
+
+      cartItems.innerHTML = '';
+      let total = 0;
+      cart.forEach(item => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${item.productName} - $${item.productPrice}`;
+        cartItems.appendChild(listItem);
+        total += item.productPrice;
+      });
+
+      totalPrice.textContent = `Total: $${total}`;
+      checkoutModal.style.display = 'block';
+    }
+
+    // Checkout and save to database
+    function checkout() {
+      const user = auth.currentUser;
+
+      if (!user) {
+        alert('You need to sign in first');
+        return;
+      }
+
+      const order = {
+        userId: user.uid,
+        cartItems: cart,
+        totalPrice: cart.reduce((total, item) => total + item.productPrice, 0),
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      };
+
+      db.collection('orders').add(order)
+        .then(() => {
+          alert('Order placed successfully!');
+          cart = [];
+          updateCartDisplay();
+          document.getElementById('checkout-modal').style.display = 'none';
+        })
+        .catch(error => {
+          console.error('Error placing order:', error);
+        });
+    }
+
+    // Sign out function
+    function signOut() {
+      auth.signOut().then(() => {
+        console.log('User signed out');
+        window.location.href = '/';
+      }).catch(error => {
+        console.error('Error during sign-out:', error);
+      });
+    }
+
+    // Initialize Firebase Auth State Listener
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('User signed in:', user);
+      } else {
+        console.log('No user signed in');
+      }
+    });
+  </script>
+</body>
+</html>
