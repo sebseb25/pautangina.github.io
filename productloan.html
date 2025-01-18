@@ -5,6 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Listing</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Ensure the sign-out button is placed in the top right corner */
+    #sign-out-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 10px 20px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #sign-out-btn:hover {
+      background-color: darkred;
+    }
+  </style>
 </head>
 <body>
   <h1>Available Products for Loan</h1>
@@ -38,6 +57,9 @@
     <p id="total-price">Total: $0</p>
     <button onclick="checkout()">Submit</button>
   </div>
+
+  <!-- Sign-Out Button -->
+  <button id="sign-out-btn" onclick="signOut()">Sign Out</button>
 
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
