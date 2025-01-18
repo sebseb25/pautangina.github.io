@@ -3,38 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Sign-In</title>
-  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <title>Google Sign-In with Firebase</title>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+
   <script>
-    function onSignIn(googleUser) {
-      // Get the Google User's ID token
-      var id_token = googleUser.getAuthResponse().id_token;
-      
-      // Send the ID token to your backend for verification
-      console.log("ID Token: " + id_token);
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6WHRzPz5kpF39K0U-RwB6Q-8DySMJ0uM",
+      authDomain: "pautangina-6f0ab.firebaseapp.com",
+      projectId: "pautangina-6f0ab",
+      storageBucket: "pautangina-6f0ab.firebasestorage.app",
+      messagingSenderId: "981514614207",
+      appId: "1:981514614207:web:ad7f106d68991920ff5d0a",
+      measurementId: "G-99917HK00J"
+    };
 
-      // Redirect the user or handle authentication on frontend
-      // Here we simulate a redirection after successful sign-in
-      window.location.href = "/dashboard.html";  // Redirect to a dashboard page
-    }
-
-    function onSignOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-        console.log("User signed out.");
-        window.location.href = "/";  // Redirect to homepage after sign-out
-      });
-    }
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
   </script>
 </head>
 <body>
   <h1>Sign In with Google</h1>
   
   <!-- Google Sign-In button -->
-  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  <button onclick="onSignIn()">Sign In with Google</button>
   
-  <!-- Button for sign out -->
+  <!-- Sign-Out button -->
   <br>
   <button onclick="onSignOut()">Sign Out</button>
+
+  <script>
+    // Google Sign-In function
+    function onSignIn() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).then((result) => {
+        const user = result.user;
+        console.log(user);  // Log user details (name, email, etc.)
+
+        // Redirect after successful sign-in
+        window.location.href = "/dashboard.html";  // Adjust this as needed
+      }).catch((error) => {
+        console.error("Error during sign-in:", error.message);
+      });
+    }
+
+    // Google Sign-Out function
+    function onSignOut() {
+      auth.signOut().then(() => {
+        console.log('User signed out.');
+        window.location.href = "/";  // Redirect to homepage after sign-out
+      }).catch((error) => {
+        console.error("Error during sign-out:", error.message);
+      });
+    }
+
+    // Firebase Auth State Listener (to manage user state persistence)
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log("User is signed in:", user);
+        window.location.href = "/dashboard.html";  // Redirect to dashboard if signed in
+      } else {
+        console.log("No user is signed in.");
+      }
+    });
+  </script>
 </body>
 </html>
