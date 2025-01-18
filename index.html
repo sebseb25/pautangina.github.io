@@ -10,31 +10,26 @@
       var profile = googleUser.getBasicProfile();
       var id_token = googleUser.getAuthResponse().id_token;
 
-      // Send the ID token to your server for authentication
+      // Send the ID token to your backend server for verification
+      // (We'll handle this next)
       console.log("ID Token: " + id_token);
-      
-      // Send the ID token to your backend to verify and process the login or registration
-      fetch('/verify-google-token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ id_token: id_token })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Redirect user to the dashboard or appropriate page
-          window.location.href = "/dashboard";
-        } else {
-          alert("Authentication failed. Please try again.");
-        }
+
+      // Example: redirect the user after login
+      window.location.href = "/dashboard";
+    }
+
+    function onSignOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log("User signed out.");
+        window.location.href = "/";  // Redirect to homepage
       });
     }
   </script>
 </head>
 <body>
-  <!-- Google Sign-In button -->
   <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  <br>
+  <button onclick="onSignOut()">Sign Out</button>
 </body>
 </html>
