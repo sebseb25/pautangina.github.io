@@ -148,7 +148,7 @@
     function signOut() {
       auth.signOut().then(() => {
         console.log('User signed out');
-        window.location.href = '/pautangina.github.io/index.html';
+        window.location.href = '/pautangina.github.io/index.html'; // Adjust to your redirect URL
       }).catch(error => {
         console.error('Error during sign-out:', error);
       });
@@ -158,20 +158,12 @@
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log('User signed in:', user);
-        // Enable the sign-out button when user is signed in
+        // Show the sign-out button when user is signed in
         document.getElementById('sign-out-btn').style.display = 'block';
+        document.getElementById('sign-out-btn').onclick = signOut;  // Bind the sign-out function
       } else {
         console.log('No user signed in');
         // Hide the sign-out button when no user is signed in
-        document.getElementById('sign-out-btn').style.display = 'none';
-      }
-    });
-
-    // Display the sign-out button by default if the user is signed in
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        document.getElementById('sign-out-btn').style.display = 'block';
-      } else {
         document.getElementById('sign-out-btn').style.display = 'none';
       }
     });
