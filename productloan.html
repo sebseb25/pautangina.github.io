@@ -59,7 +59,7 @@
   </div>
 
   <!-- Sign-Out Button -->
-  <button id="sign-out-btn" onclick="signOut()">Sign Out</button>
+  <button id="sign-out-btn">Sign Out</button>
 
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
@@ -158,8 +158,21 @@
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log('User signed in:', user);
+        // Enable the sign-out button when user is signed in
+        document.getElementById('sign-out-btn').style.display = 'block';
       } else {
         console.log('No user signed in');
+        // Hide the sign-out button when no user is signed in
+        document.getElementById('sign-out-btn').style.display = 'none';
+      }
+    });
+
+    // Display the sign-out button by default if the user is signed in
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        document.getElementById('sign-out-btn').style.display = 'block';
+      } else {
+        document.getElementById('sign-out-btn').style.display = 'none';
       }
     });
   </script>
