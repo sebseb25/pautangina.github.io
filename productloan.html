@@ -5,100 +5,44 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Listing</title>
   <link rel="stylesheet" href="style.css">
-  <style>
-    /* Ensure the sign-out button is placed in the top right corner */
-    #sign-out-btn {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      padding: 10px 20px;
-      background-color: red;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    #sign-out-btn:hover {
-      background-color: darkred;
-    }
-
-    /* Cart Icon */
-    #cart {
-      position: fixed;
-      top: 10px;
-      right: 50px;
-      font-size: 24px;
-      cursor: pointer;
-    }
-
-    /* Checkout Modal */
-    #checkout-modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      padding: 20px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-    }
-
-    #cart-items {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    #cart-items li {
-      margin: 5px 0;
-    }
-  </style>
 </head>
 <body>
   <h1>Available Products for Loan</h1>
 
   <div id="product-list">
-    <!-- Example Product 1 -->
     <div class="product" data-id="1">
       <h2>Product 1</h2>
       <p>Price: $200</p>
       <button onclick="addToCart(1, 'Product 1', 200)">Add to Cart</button>
     </div>
-    <!-- Example Product 2 -->
     <div class="product" data-id="2">
       <h2>Product 2</h2>
       <p>Price: $350</p>
       <button onclick="addToCart(2, 'Product 2', 350)">Add to Cart</button>
     </div>
-    <!-- Add more products here -->
   </div>
 
-  <!-- Cart Icon -->
   <div id="cart">
     <span id="cart-icon">🛒</span>
     <span id="cart-count">0</span>
   </div>
 
-  <!-- Checkout Modal -->
-  <div id="checkout-modal">
+  <div id="checkout-modal" style="display:none;">
     <h3>Checkout</h3>
     <ul id="cart-items"></ul>
     <p id="total-price">Total: $0</p>
-    <button onclick="checkout()">Submit Loan Application</button>
+    <button onclick="checkout()">Submit</button>
   </div>
 
-  <!-- Sign-Out Button -->
-  <button id="sign-out-btn" style="display:none;" onclick="signOut()">Sign Out</button>
+  <button id="sign-out-btn" onclick="signOut()">Sign Out</button>
 
-  <!-- Firebase Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-  <script>
-    // Initialize Firebase
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyD6WHRzPz5kpF39K0U-RwB6Q-8DySMJ0uM",
       authDomain: "pautangina-6f0ab.firebaseapp.com",
@@ -108,29 +52,27 @@
       appId: "1:981514614207:web:ad7f106d68991920ff5d0a",
       measurementId: "G-99917HK00J"
     };
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
 
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Add to cart functionality
     let cart = [];
 
-    // Add product to cart
     function addToCart(productId, productName, productPrice) {
       const product = { productId, productName, productPrice };
       cart.push(product);
       updateCartDisplay();
     }
 
-    // Update the cart display (cart count and checkout button)
     function updateCartDisplay() {
       const cartCount = document.getElementById('cart-count');
       cartCount.textContent = cart.length;
-      // Open checkout modal when the cart icon is clicked
-      const cartIcon = document.getElementById('cart-icon');
-      cartIcon.addEventListener('click', openCheckoutModal);
     }
 
-    // Open checkout modal and display cart items
+    // Open checkout modal
     function openCheckoutModal() {
       const checkoutModal = document.getElementById('checkout-modal');
       const cartItems = document.getElementById('cart-items');
@@ -149,7 +91,7 @@
       checkoutModal.style.display = 'block';
     }
 
-    // Checkout and save loan application to Firestore
+    // Checkout and save to database (as loan application)
     function checkout() {
       const user = auth.currentUser;
 
@@ -158,19 +100,18 @@
         return;
       }
 
-      // Create a loan application object
-      const loanApplication = {
-        userId: user.uid,  // Store user ID from Firebase authentication
-        cartItems: cart,    // The cart items they added
-        totalPrice: cart.reduce((total, item) => total + item.productPrice, 0),  // Calculate total loan amount
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()  // Timestamp for when the loan was applied
+      const order = {
+        userId: user.uid,
+        cartItems: cart,
+        totalPrice: cart.reduce((total, item) => total + item.productPrice, 0),
+        timestamp: new Date()
       };
 
       // Save loan application to Firestore
-      db.collection('loanApplications').add(loanApplication)
+      addDoc(collection(db, "loan_applications"), order)
         .then(() => {
           alert('Loan application submitted successfully!');
-          cart = [];  // Clear the cart after submitting
+          cart = [];
           updateCartDisplay();
           document.getElementById('checkout-modal').style.display = 'none';
         })
@@ -179,25 +120,23 @@
         });
     }
 
-    // Sign out function
+    // Sign out functionality
     function signOut() {
       auth.signOut().then(() => {
         console.log('User signed out');
-        window.location.href = '/pautangina.github.io/index.html';  // Redirect after sign out
+        window.location.href = '/';  // Redirect to homepage after sign-out
       }).catch(error => {
         console.error('Error during sign-out:', error);
       });
     }
 
     // Initialize Firebase Auth State Listener
-    firebase.auth().onAuthStateChanged((user) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log('User signed in:', user);
-        // Enable the sign-out button when user is signed in
         document.getElementById('sign-out-btn').style.display = 'block';
       } else {
         console.log('No user signed in');
-        // Hide the sign-out button when no user is signed in
         document.getElementById('sign-out-btn').style.display = 'none';
       }
     });
