@@ -49,10 +49,28 @@
   <div id="product-list">
     <!-- Example Product 1 -->
     <div class="product" data-id="1">
-      <h2>TV01</h2>
-      <p>Price: Php 53,000</p>
-      <button onclick="addToCart(1, 'Product 1', 53000)">Add to Cart</button>
-    </div>
+    <h2>TV01</h2>
+    <p>Price: Php 53,000</p>
+  
+  <!-- Expand Button -->
+  <button onclick="toggleDetails(1)">Show Details</button>
+
+  <!-- Product Details (Initially Hidden) -->
+  <div id="details-1" class="product-details" style="display: none;">
+    <p><strong>Brand:</strong> Samsung</p>
+    <p><strong>Manufacturer:</strong> Samsung Electronics</p>
+    <p><strong>Specifications:</strong></p>
+    <ul>
+      <li>Screen Size: 55 inches</li>
+      <li>Resolution: 4K Ultra HD</li>
+      <li>Smart TV: Yes</li>
+      <li>HDR: Yes</li>
+    </ul>
+  </div>
+
+  <!-- Add to Cart Button -->
+  <button onclick="addToCart(1, 'TV01', 53000)">Add to Cart</button>
+</div>
     <!-- Example Product 2 -->
     <div class="product" data-id="2">
       <h2>Dell Laptop 01</h2>
