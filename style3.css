@@ -22,7 +22,7 @@ h2 {
 }
 
 .product-image {
-    width: 75px;  /* Adjust the width */
+    width: 100px;  /* Adjust the width */
     height: auto;  /* Maintain the aspect ratio */
     object-fit: cover;  /* Make sure the image covers the area without distorting */
     border-radius: 8px;  /* Optional: Adds rounded corners to the image */
