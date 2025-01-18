@@ -3,76 +3,158 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cart Summary</title>
+  <title>Cart</title>
   <link rel="stylesheet" href="style3.css">
   <style>
-    .cart-summary {
-      margin: 20px;
+    /* Style the checkout page */
+    label {
+      display: block;
+      margin-top: 10px;
     }
 
-    .cart-summary h3 {
-      margin-bottom: 20px;
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
     }
 
-    .cart-summary ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    .cart-summary li {
-      margin: 10px 0;
-    }
-
-    .cart-summary p {
-      font-weight: bold;
+    button {
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
+  <h1>Your Cart</h1>
 
-  <div class="cart-summary">
-    <h3>Cart Summary</h3>
+  <!-- Cart Items will be dynamically populated here -->
+  <div id="cart-items"></div>
 
-    <div id="checkout-details">
-      <!-- Checkout details will be populated here -->
-    </div>
+  <p id="total-price">Total: Php 0</p>
 
-    <button onclick="window.location.href='index.html'">Go Back to Product Listing</button>
-  </div>
+  <!-- Loan Term Selection -->
+  <label for="loan-term">Select Loan Term:</label>
+  <select id="loan-term">
+    <option value="1">1 Month</option>
+    <option value="2">2 Months</option>
+    <option value="3">3 Months</option>
+    <option value="4">4 Months</option>
+    <option value="5">5 Months</option>
+    <option value="6">6 Months</option>
+  </select>
 
-  <script>
-    // Read the checkout data from localStorage
-    const checkoutData = JSON.parse(localStorage.getItem('checkoutData'));
+  <!-- New Fields for Checkout -->
+  <label for="full-name">Full Name:</label>
+  <input type="text" id="full-name" placeholder="Enter your full name">
 
-    if (checkoutData) {
-      // Create the content dynamically
-      const checkoutDetails = document.getElementById('checkout-details');
+  <label for="email">Email Address:</label>
+  <input type="text" id="email" placeholder="Enter your email address">
 
-      const cartItemsList = document.createElement('ul');
-      checkoutData.cartItems.forEach(item => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${item.productName} - Php ${item.productPrice}`;
-        cartItemsList.appendChild(listItem);
+  <label for="address">Address:</label>
+  <input type="text" id="address" placeholder="Enter your address">
+
+  <label for="phone">Phone Number:</label>
+  <input type="text" id="phone" placeholder="Enter your phone number">
+
+  <label for="department">Department:</label>
+  <select id="department">
+    <option value="Financials">Financials</option>
+    <option value="Blooms">Blooms</option>
+    <option value="QID">QID</option>
+    <option value="HR">HR</option>
+    <option value="Admin">Admin</option>
+  </select>
+
+  <label for="team">Team:</label>
+  <input type="text" id="team" placeholder="Enter your team name">
+
+  <button onclick="submitOrder()">Submit</button>
+
+  <!-- Firebase Modules as ES Modules -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6WHRzPz5kpF39K0U-RwB6Q-8DySMJ0uM",
+      authDomain: "pautangina-6f0ab.firebaseapp.com",
+      projectId: "pautangina-6f0ab",
+      storageBucket: "pautangina-6f0ab.firebasestorage.app",
+      messagingSenderId: "981514614207",
+      appId: "1:981514614207:web:ad7f106d68991920ff5d0a",
+      measurementId: "G-99917HK00J"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let totalPrice = 0;
+
+    // Display cart items and calculate total price
+    const cartItemsContainer = document.getElementById("cart-items");
+    cart.forEach(item => {
+      const itemElement = document.createElement("div");
+      itemElement.textContent = `${item.productName} - Php ${item.productPrice}`;
+      cartItemsContainer.appendChild(itemElement);
+      totalPrice += item.productPrice;
+    });
+
+    document.getElementById("total-price").textContent = `Total: Php ${totalPrice}`;
+
+    // Checkout and save to database
+    window.submitOrder = function() {
+      const user = auth.currentUser;
+
+      if (!user) {
+        alert("You need to sign in first");
+        return;
+      }
+
+      const loanTerm = document.getElementById("loan-term").value;
+      const fullName = document.getElementById("full-name").value;
+      const email = document.getElementById("email").value;
+      const address = document.getElementById("address").value;
+      const phone = document.getElementById("phone").value;
+      const department = document.getElementById("department").value;
+      const team = document.getElementById("team").value;
+
+      const order = {
+        userId: user.uid,
+        cart: cart,
+        totalPrice: totalPrice,
+        loanTerm: loanTerm,
+        fullName: fullName,
+        email: email,
+        address: address,
+        phone: phone,
+        department: department,
+        team: team,
+        timestamp: serverTimestamp(),
+      };
+
+      addDoc(collection(db, "orders"), order)
+        .then(() => {
+          alert("Order submitted successfully");
+          localStorage.removeItem("cart"); // Clear the cart after submitting
+          window.location.href = "productloan.html"; // Redirect back to the product page
+        })
+        .catch(error => {
+          console.error("Error submitting order:", error);
+        });
+    };
+
+    // Sign-out function
+    window.handleSignOut = function() {
+      signOut(auth).then(() => {
+        window.location.href = '/pautangina.github.io/index.html'; // Adjust to your redirect URL
+      }).catch(error => {
+        console.error('Error during sign-out:', error);
       });
-
-      checkoutDetails.innerHTML = `
-        <p><strong>Full Name:</strong> ${checkoutData.fullName}</p>
-        <p><strong>Email:</strong> ${checkoutData.email}</p>
-        <p><strong>Address:</strong> ${checkoutData.address}</p>
-        <p><strong>Phone Number:</strong> ${checkoutData.phone}</p>
-        <p><strong>Department:</strong> ${checkoutData.department}</p>
-        <p><strong>Team:</strong> ${checkoutData.team}</p>
-        <p><strong>Loan Term:</strong> ${checkoutData.loanTerm} Months</p>
-        <p><strong>Total Price:</strong> Php ${checkoutData.totalPrice}</p>
-        <h4>Cart Items:</h4>
-      `;
-      checkoutDetails.appendChild(cartItemsList);
-    } else {
-      // Handle case where no checkout data is found
-      document.getElementById('checkout-details').innerHTML = '<p>No checkout data found. Please start the checkout process again.</p>';
     }
   </script>
-
 </body>
 </html>
-
