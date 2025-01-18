@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In</title>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script>
+    function onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      var id_token = googleUser.getAuthResponse().id_token;
+
+      // Send the ID token to your server for authentication
+      console.log("ID Token: " + id_token);
+      
+      // Send the ID token to your backend to verify and process the login or registration
+      fetch('/verify-google-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id_token: id_token })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Redirect user to the dashboard or appropriate page
+          window.location.href = "/dashboard";
+        } else {
+          alert("Authentication failed. Please try again.");
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <!-- Google Sign-In button -->
+  <div class="g-signin2" data-onsuccess="onSignIn"></div>
+</body>
+</html>
