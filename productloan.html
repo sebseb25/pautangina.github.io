@@ -147,8 +147,8 @@
         });
     }
 
-    // Sign out function
-    function signOut() {
+    // Sign out function (renamed to handleSignOut)
+    function handleSignOut() {
       console.log('Sign-out initiated');
       signOut(auth).then(() => {
         console.log('User signed out');
@@ -164,7 +164,7 @@
         console.log('User signed in:', user);
         // Show the sign-out button when user is signed in
         document.getElementById('sign-out-btn').style.display = 'block';
-        document.getElementById('sign-out-btn').onclick = signOut;  // Bind the sign-out function
+        document.getElementById('sign-out-btn').onclick = handleSignOut;  // Bind the renamed sign-out function
       } else {
         console.log('No user signed in');
         // Hide the sign-out button when no user is signed in
