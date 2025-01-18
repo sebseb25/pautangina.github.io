@@ -1,221 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support Team Chat</title>
-    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.5.0/firebase-auth-compat.js"></script>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Sign-In with Firebase</title>
+  
+  <!-- Link to the external CSS file -->
+  <link rel="stylesheet" href="style2.css">
+
+  <!-- Firebase SDK (Modular Version) -->
+  <script type="module">
+    // Import the required Firebase SDK modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6WHRzPz5kpF39K0U-RwB6Q-8DySMJ0uM",
+      authDomain: "pautangina-6f0ab.firebaseapp.com",
+      projectId: "pautangina-6f0ab",
+      storageBucket: "pautangina-6f0ab.firebasestorage.app",
+      messagingSenderId: "981514614207",
+      appId: "1:981514614207:web:ad7f106d68991920ff5d0a",
+      measurementId: "G-99917HK00J"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Google Sign-In function
+    function onSignIn() {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const user = result.user;
+          console.log(user);  // Log user details (name, email, etc.)
+
+          // Redirect after successful sign-in
+          window.location.href = "/dashboard.html";  // Adjust this as needed
+        })
+        .catch((error) => {
+          console.error("Error during sign-in:", error.message);
+        });
+    }
+
+    // Google Sign-Out function
+    function onSignOut() {
+      signOut(auth)
+        .then(() => {
+          console.log('User signed out.');
+          window.location.href = "/";  // Redirect to homepage after sign-out
+        })
+        .catch((error) => {
+          console.error("Error during sign-out:", error.message);
+        });
+    }
+
+    // Firebase Auth State Listener (to manage user state persistence)
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is signed in:", user);
+        window.location.href = "/dashboard.html";  // Redirect to dashboard if signed in
+      } else {
+        console.log("No user is signed in.");
+      }
+    });
+
+    // Expose the functions to the global scope
+    window.onSignIn = onSignIn;
+    window.onSignOut = onSignOut;
+  </script>
 </head>
 <body>
-    <header>
-        <img src="https://assets.softr-files.com/applications/5161fb19-ec3f-4962-b3b7-49c68eba0c5f/assets/25fa525f-cf79-4907-8efe-c0ed02c3bdde.png" alt="Logo">
-        <h1>Support Team Chat</h1>
-        <h2 id="notification" style="display: none;"></h2>
-    </header>
-    
-    <div id="customers">
-        <select id="customerSelect" onchange="loadCustomerChat()">
-            <option value="" selected disabled>Select Customer</option>
-        </select>
-    </div>
-
-    <div id="chat" style="display: none;">
-        <div id="messages"></div>
-        <input type="text" id="messageInput" placeholder="Type your message">
-        <button onclick="sendMessage()">Send</button>
-        <button onclick="clearMessages()">Clear Messages</button>
-        <button onclick="logout()">Logout</button>
-    </div>
-
-    <div id="login">
-        <input type="email" id="email" placeholder="Email">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="login()">Login</button>
-    </div>
-
-    <audio id="notificationSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
-
-    <script>
-        // Initialize Firebase
-        var firebaseConfig = {
-            apiKey: "AIzaSyDQkaU837sJGrzf2O61l1tj8BR8j0nKLcs",
-            authDomain: "talk-to-ina.firebaseapp.com",
-            projectId: "talk-to-ina",
-            storageBucket: "talk-to-ina.appspot.com",
-            messagingSenderId: "281486923018",
-            appId: "1:281486923018:web:d4a73f5231d8de0a0396f3"
-        };
-        firebase.initializeApp(firebaseConfig);
-
-        // Get a reference to Firestore
-        var db = firebase.firestore();
-
-        // Track viewed messages
-        var viewedMessages = {};
-
-        // Function to show notification
-        function showNotification(message) {
-            var notificationElement = document.getElementById('notification');
-            notificationElement.innerText = message;
-            notificationElement.style.display = 'block';
-            document.getElementById('notificationSound').play();
-        }
-
-        // Function to load senders in the dropdown
-        function loadSenders() {
-            console.log('Loading senders...');
-            var customerSelect = document.getElementById('customerSelect');
-            db.collectionGroup('messages').get().then(function(querySnapshot) {
-                var senders = new Set(); // Using a Set to avoid duplicate senders
-                querySnapshot.forEach(function(doc) {
-                    var sender = doc.data().sender;
-                    senders.add(sender);
-                });
-                customerSelect.innerHTML = '<option value="" selected disabled>Select Sender</option>';
-                senders.forEach(function(sender) {
-                    var option = document.createElement('option');
-                    option.value = sender;
-                    option.textContent = sender;
-                    customerSelect.appendChild(option);
-                });
-            }).catch(function(error) {
-                console.error('Error loading senders:', error);
-            });
-        }
-
-        // Function to load chat messages for the selected sender
-        function loadCustomerChat() {
-            var sender = document.getElementById('customerSelect').value;
-            if (sender) {
-                var messagesDiv = document.getElementById('messages');
-                messagesDiv.innerHTML = ''; // Clear previous messages
-                viewedMessages[sender] = true; // Mark as viewed
-                db.collection('customers').doc(sender).collection('messages').orderBy('timestamp').onSnapshot(function(snapshot) {
-                    messagesDiv.innerHTML = '';
-                    snapshot.forEach(function(doc) {
-                        var message = doc.data();
-                        var messageSender = message.sender === sender ? sender : 'Ina mo (Chat Support)';
-                        var messageElement = document.createElement('div');
-                        messageElement.innerText = messageSender + ': ' + message.message;
-                        messagesDiv.appendChild(messageElement);
-                    });
-                    // Clear notification if messages are loaded for the current sender
-                    document.getElementById('notification').style.display = 'none';
-                });
-            }
-        }
-
-        // Define the sendMessage function
-        function sendMessage() {
-            var messageInput = document.getElementById('messageInput');
-            var message = messageInput.value;
-            var sender = document.getElementById('customerSelect').value;
-            if (sender && message.trim() !== '') {
-                db.collection('customers').doc(sender).collection('messages').add({
-                    sender: 'Ina mo (Chat support)',
-                    message: message,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(function() {
-                    console.log('Message sent successfully');
-                }).catch(function(error) {
-                    console.error('Error sending message:', error);
-                });
-                messageInput.value = '';
-            }
-        }
-
-        // Function to clear all messages for the selected sender
-        function clearMessages() {
-            var sender = document.getElementById('customerSelect').value;
-            if (sender) {
-                var confirmClear = confirm("Are you sure you want to clear all messages for this sender?");
-                if (confirmClear) {
-                    db.collection('customers').doc(sender).collection('messages').get().then(function(querySnapshot) {
-                        querySnapshot.forEach(function(doc) {
-                            doc.ref.delete();
-                        });
-                        console.log('All messages for sender ' + sender + ' cleared successfully.');
-                    }).catch(function(error) {
-                        console.error('Error clearing messages:', error);
-                    });
-                }
-            } else {
-                alert("Please select a sender first.");
-            }
-        }
-
-        // Function to handle user login
-        function login() {
-            var email = document.getElementById('email').value;
-            var password = document.getElementById('password').value;
-            firebase.auth().signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                // Signed in
-                var user = userCredential.user;
-                console.log('User logged in:', user.email);
-                document.getElementById('login').style.display = 'none'; // Hide login form
-                document.getElementById('chat').style.display = 'block'; // Show chat interface
-                loadSenders(); // Load senders
-                // Listen for new messages
-                db.collectionGroup('messages').onSnapshot(function(snapshot) {
-                    snapshot.docChanges().forEach(function(change) {
-                        if (change.type === 'added') {
-                            var newMessage = change.doc.data();
-                            var sender = newMessage.sender;
-                            if (!viewedMessages[sender]) {
-                                showNotification('New message from ' + sender + ': ' + newMessage.message);
-                            }
-                        }
-                    });
-                });
-            })
-            .catch((error) => {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.error('Login error:', errorMessage);
-            });
-        }
-
-        // Function to handle user logout
-        function logout() {
-            firebase.auth().signOut().then(function() {
-                console.log('User logged out');
-                document.getElementById('login').style.display = 'block'; // Show login form
-                document.getElementById('chat').style.display = 'none'; // Hide chat interface
-                viewedMessages = {}; // Clear viewed messages
-            }).catch(function(error) {
-                console.error('Logout error:', error);
-            });
-        }
-
-        // Check if user is already logged in
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user) {
-                console.log('User is signed in:', user.email);
-                document.getElementById('login').style.display = 'none'; // Hide login form
-                document.getElementById('chat').style.display = 'block'; // Show chat interface
-                loadSenders(); // Load senders
-                // Listen for new messages
-                db.collectionGroup('messages').onSnapshot(function(snapshot) {
-                    snapshot.docChanges().forEach(function(change) {
-                        if (change.type === 'added') {
-                            var newMessage = change.doc.data();
-                            var sender = newMessage.sender;
-                            if (!viewedMessages[sender]) {
-                                showNotification('New message from ' + sender + ': ' + newMessage.message);
-                            }
-                        }
-                    });
-                });
-            } else {
-                console.log('No user is signed in');
-                document.getElementById('login').style.display = 'block'; // Show login form
-                document.getElementById('chat').style.display = 'none'; // Hide chat interface
-            }
-        });
-    </script>
+  <h1>Sign In with Google</h1>
+  
+  <!-- Google Sign-In button -->
+  <button onclick="onSignIn()">Sign In with Google</button>
+  
+  <!-- Sign-Out button -->
+  <br>
+  <button onclick="onSignOut()">Sign Out</button>
 </body>
 </html>
