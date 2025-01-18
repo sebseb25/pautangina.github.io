@@ -3,32 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In</title>
+  <title>Google Sign-In</title>
   <script src="https://apis.google.com/js/platform.js" async defer></script>
   <script>
     function onSignIn(googleUser) {
-      var profile = googleUser.getBasicProfile();
+      // Get the Google User's ID token
       var id_token = googleUser.getAuthResponse().id_token;
-
-      // Send the ID token to your backend server for verification
-      // (We'll handle this next)
+      
+      // Send the ID token to your backend for verification
       console.log("ID Token: " + id_token);
 
-      // Example: redirect the user after login
-      window.location.href = "/dashboard";
+      // Redirect the user or handle authentication on frontend
+      // Here we simulate a redirection after successful sign-in
+      window.location.href = "/dashboard.html";  // Redirect to a dashboard page
     }
 
     function onSignOut() {
       var auth2 = gapi.auth2.getAuthInstance();
       auth2.signOut().then(function () {
         console.log("User signed out.");
-        window.location.href = "/";  // Redirect to homepage
+        window.location.href = "/";  // Redirect to homepage after sign-out
       });
     }
   </script>
 </head>
 <body>
+  <h1>Sign In with Google</h1>
+  
+  <!-- Google Sign-In button -->
   <div class="g-signin2" data-onsuccess="onSignIn"></div>
+  
+  <!-- Button for sign out -->
   <br>
   <button onclick="onSignOut()">Sign Out</button>
 </body>
