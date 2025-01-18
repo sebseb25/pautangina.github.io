@@ -72,7 +72,7 @@
   <div id="checkout-modal" style="display:none;">
     <h3>Checkout</h3>
     <ul id="cart-items"></ul>
-    <p id="total-price">Total: $0</p>
+    <p id="total-price">Total: Php 0</p>
 
     <!-- Loan Term Selection -->
     <label for="loan-term">Select Loan Term:</label>
@@ -155,7 +155,7 @@
       cartIcon.addEventListener('click', openCheckoutModal);
     }
 
-    // Open checkout modal
+    // Open checkout modal and redirect to cart.html
     function openCheckoutModal() {
       const checkoutModal = document.getElementById('checkout-modal');
       const cartItems = document.getElementById('cart-items');
@@ -165,13 +165,30 @@
       let total = 0;
       cart.forEach(item => {
         const listItem = document.createElement('li');
-        listItem.textContent = `${item.productName} - $${item.productPrice}`;
+        listItem.textContent = `${item.productName} - Php ${item.productPrice}`;
         cartItems.appendChild(listItem);
         total += item.productPrice;
       });
 
-      totalPrice.textContent = `Total: $${total}`;
-      checkoutModal.style.display = 'block';
+      totalPrice.textContent = `Total: Php ${total}`;
+
+      // Save checkout information in localStorage
+      const checkoutData = {
+        cartItems: cart,
+        totalPrice: total,
+        loanTerm: document.getElementById('loan-term').value,
+        fullName: document.getElementById('full-name').value,
+        email: document.getElementById('email').value,
+        address: document.getElementById('address').value,
+        phone: document.getElementById('phone').value,
+        department: document.getElementById('department').value,
+        team: document.getElementById('team').value,
+      };
+
+      localStorage.setItem('checkoutData', JSON.stringify(checkoutData));
+
+      // Redirect to cart.html
+      window.location.href = 'cart.html';
     }
 
     // Checkout and save to database
