@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Google Sign-In with Firebase</title>
   
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+  <!-- Firebase SDK (Modular Version) -->
+  <script type="module">
+    // Import the required Firebase SDK modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-  <script>
-    // Initialize Firebase
+    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyD6WHRzPz5kpF39K0U-RwB6Q-8DySMJ0uM",
       authDomain: "pautangina-6f0ab.firebaseapp.com",
@@ -21,8 +22,47 @@
       measurementId: "G-99917HK00J"
     };
 
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Google Sign-In function
+    function onSignIn() {
+      const provider = new GoogleAuthProvider();
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          const user = result.user;
+          console.log(user);  // Log user details (name, email, etc.)
+
+          // Redirect after successful sign-in
+          window.location.href = "/dashboard.html";  // Adjust this as needed
+        })
+        .catch((error) => {
+          console.error("Error during sign-in:", error.message);
+        });
+    }
+
+    // Google Sign-Out function
+    function onSignOut() {
+      signOut(auth)
+        .then(() => {
+          console.log('User signed out.');
+          window.location.href = "/";  // Redirect to homepage after sign-out
+        })
+        .catch((error) => {
+          console.error("Error during sign-out:", error.message);
+        });
+    }
+
+    // Firebase Auth State Listener (to manage user state persistence)
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is signed in:", user);
+        window.location.href = "/dashboard.html";  // Redirect to dashboard if signed in
+      } else {
+        console.log("No user is signed in.");
+      }
+    });
   </script>
 </head>
 <body>
@@ -34,41 +74,5 @@
   <!-- Sign-Out button -->
   <br>
   <button onclick="onSignOut()">Sign Out</button>
-
-  <script>
-    // Google Sign-In function
-    function onSignIn() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider).then((result) => {
-        const user = result.user;
-        console.log(user);  // Log user details (name, email, etc.)
-
-        // Redirect after successful sign-in
-        window.location.href = "/dashboard.html";  // Adjust this as needed
-      }).catch((error) => {
-        console.error("Error during sign-in:", error.message);
-      });
-    }
-
-    // Google Sign-Out function
-    function onSignOut() {
-      auth.signOut().then(() => {
-        console.log('User signed out.');
-        window.location.href = "/";  // Redirect to homepage after sign-out
-      }).catch((error) => {
-        console.error("Error during sign-out:", error.message);
-      });
-    }
-
-    // Firebase Auth State Listener (to manage user state persistence)
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log("User is signed in:", user);
-        window.location.href = "/dashboard.html";  // Redirect to dashboard if signed in
-      } else {
-        console.log("No user is signed in.");
-      }
-    });
-  </script>
 </body>
 </html>
