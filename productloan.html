@@ -41,6 +41,11 @@
     button {
       margin-top: 20px;
     }
+
+    /* Hide product details initially */
+    .product-details {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -133,6 +138,20 @@
           console.error('Error during sign-out:', error);
         });
       }
+
+      // Toggle product details visibility
+      window.toggleDetails = function(productId) {
+        const detailsDiv = document.getElementById(`details-${productId}`);
+        const button = detailsDiv.previousElementSibling; // The Show Details button
+
+        if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+          detailsDiv.style.display = 'block';
+          button.textContent = 'Hide Details';
+        } else {
+          detailsDiv.style.display = 'none';
+          button.textContent = 'Show Details';
+        }
+      };
 
       // Initialize Firebase Auth State Listener
       onAuthStateChanged(auth, (user) => {
