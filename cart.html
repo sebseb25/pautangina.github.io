@@ -1,1 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart Summary</title>
+  <link rel="stylesheet" href="style3.css">
+  <style>
+    .cart-summary {
+      margin: 20px;
+    }
+
+    .cart-summary h3 {
+      margin-bottom: 20px;
+    }
+
+    .cart-summary ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .cart-summary li {
+      margin: 10px 0;
+    }
+
+    .cart-summary p {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cart-summary">
+    <h3>Cart Summary</h3>
+
+    <div id="checkout-details">
+      <!-- Checkout details will be populated here -->
+    </div>
+
+    <button onclick="window.location.href='index.html'">Go Back to Product Listing</button>
+  </div>
+
+  <script>
+    // Read the checkout data from localStorage
+    const checkoutData = JSON.parse(localStorage.getItem('checkoutData'));
+
+    if (checkoutData) {
+      // Create the content dynamically
+      const checkoutDetails = document.getElementById('checkout-details');
+
+      const cartItemsList = document.createElement('ul');
+      checkoutData.cartItems.forEach(item => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${item.productName} - Php ${item.productPrice}`;
+        cartItemsList.appendChild(listItem);
+      });
+
+      checkoutDetails.innerHTML = `
+        <p><strong>Full Name:</strong> ${checkoutData.fullName}</p>
+        <p><strong>Email:</strong> ${checkoutData.email}</p>
+        <p><strong>Address:</strong> ${checkoutData.address}</p>
+        <p><strong>Phone Number:</strong> ${checkoutData.phone}</p>
+        <p><strong>Department:</strong> ${checkoutData.department}</p>
+        <p><strong>Team:</strong> ${checkoutData.team}</p>
+        <p><strong>Loan Term:</strong> ${checkoutData.loanTerm} Months</p>
+        <p><strong>Total Price:</strong> Php ${checkoutData.totalPrice}</p>
+        <h4>Cart Items:</h4>
+      `;
+      checkoutDetails.appendChild(cartItemsList);
+    } else {
+      // Handle case where no checkout data is found
+      document.getElementById('checkout-details').innerHTML = '<p>No checkout data found. Please start the checkout process again.</p>';
+    }
+  </script>
+
+</body>
+</html>
 
