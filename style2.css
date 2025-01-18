@@ -32,9 +32,17 @@ body {
 }
 
 /* Logo Styling */
+.logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px; /* Space below the logo */
+}
+
 .logo img {
-  max-width: 200px; /* Adjust the size of the logo */
-  margin-bottom: 20px;
+  max-width: 100%; /* Ensures the logo is responsive */
+  height: auto;    /* Maintains aspect ratio */
+  max-height: 120px; /* Optional: Limit the logo height */
+
 }
 
 /* Heading */
