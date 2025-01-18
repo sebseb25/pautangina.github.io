@@ -55,6 +55,18 @@
     <h3>Checkout</h3>
     <ul id="cart-items"></ul>
     <p id="total-price">Total: $0</p>
+
+    <!-- Loan Term Selection -->
+    <label for="loan-term">Select Loan Term:</label>
+    <select id="loan-term">
+      <option value="1">1 Month</option>
+      <option value="2">2 Months</option>
+      <option value="3">3 Months</option>
+      <option value="4">4 Months</option>
+      <option value="5">5 Months</option>
+      <option value="6">6 Months</option>
+    </select>
+
     <button onclick="checkout()">Submit</button>
   </div>
 
@@ -119,7 +131,7 @@
       checkoutModal.style.display = 'block';
     }
 
-    // Expose the checkout function to the global scope
+    // Checkout and save to database
     window.checkout = function() {
       const user = auth.currentUser;
 
@@ -128,10 +140,14 @@
         return;
       }
 
+      // Get selected loan term
+      const loanTerm = document.getElementById('loan-term').value;
+
       const order = {
         userId: user.uid,
         cartItems: cart,
         totalPrice: cart.reduce((total, item) => total + item.productPrice, 0),
+        loanTerm: loanTerm, // Add loan term to the order
         timestamp: serverTimestamp()
       };
 
@@ -145,10 +161,10 @@
         .catch(error => {
           console.error('Error placing order:', error);
         });
-    };
+    }
 
     // Sign out function (renamed to handleSignOut)
-    function handleSignOut() {
+    window.handleSignOut = function() {
       console.log('Sign-out initiated');
       signOut(auth).then(() => {
         console.log('User signed out');
