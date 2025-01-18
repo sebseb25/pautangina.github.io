@@ -26,7 +26,7 @@ h2 {
     height: auto;  /* Maintain the aspect ratio */
     object-fit: cover;  /* Make sure the image covers the area without distorting */
     border-radius: 8px;  /* Optional: Adds rounded corners to the image */
-    margin-bottom: 10px;  /* Adds space below the image */
+    margin-bottom: 0px;  /* Adds space below the image */
 }
 
 /* Chat container */
