@@ -23,6 +23,24 @@
     #sign-out-btn:hover {
       background-color: darkred;
     }
+
+    /* Style for the form inputs */
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -66,6 +84,31 @@
       <option value="5">5 Months</option>
       <option value="6">6 Months</option>
     </select>
+
+    <!-- New Fields for Checkout -->
+    <label for="full-name">Full Name:</label>
+    <input type="text" id="full-name" placeholder="Enter your full name">
+
+    <label for="email">Email Address:</label>
+    <input type="text" id="email" placeholder="Enter your email address">
+
+    <label for="address">Address:</label>
+    <input type="text" id="address" placeholder="Enter your address">
+
+    <label for="phone">Phone Number:</label>
+    <input type="text" id="phone" placeholder="Enter your phone number">
+
+    <label for="department">Department:</label>
+    <select id="department">
+      <option value="Financials">Financials</option>
+      <option value="Blooms">Blooms</option>
+      <option value="QID">QID</option>
+      <option value="HR">HR</option>
+      <option value="Admin">Admin</option>
+    </select>
+
+    <label for="team">Team:</label>
+    <input type="text" id="team" placeholder="Enter your team name">
 
     <button onclick="checkout()">Submit</button>
   </div>
@@ -140,11 +183,23 @@
         return;
       }
 
-      // Get selected loan term
+      // Get selected loan term and additional fields
       const loanTerm = document.getElementById('loan-term').value;
+      const fullName = document.getElementById('full-name').value;
+      const email = document.getElementById('email').value;
+      const address = document.getElementById('address').value;
+      const phone = document.getElementById('phone').value;
+      const department = document.getElementById('department').value;
+      const team = document.getElementById('team').value;
 
       const order = {
         userId: user.uid,
+        fullName: fullName, // Include full name in order data
+        email: email, // Include email in order data
+        address: address, // Include address in order data
+        phone: phone, // Include phone number in order data
+        department: department, // Include department in order data
+        team: team, // Include team in order data
         cartItems: cart,
         totalPrice: cart.reduce((total, item) => total + item.productPrice, 0),
         loanTerm: loanTerm, // Add loan term to the order
@@ -163,7 +218,7 @@
         });
     }
 
-    // Sign out function (renamed to handleSignOut)
+    // Sign out function
     window.handleSignOut = function() {
       console.log('Sign-out initiated');
       signOut(auth).then(() => {
