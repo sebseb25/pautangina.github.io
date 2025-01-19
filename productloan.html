@@ -5,6 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Listing</title>
   <link rel="stylesheet" href="style3.css">
+  <style>
+    /* Style for the Cart Icon */
+    #cart {
+      position: fixed;
+      top: 70px;  /* Adjusted to prevent overlap with the header */
+      right: 10px; /* Keeps it on the right side */
+      background-color: #007bff; /* Change to your preferred color */
+      color: white;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1000; /* Ensures it is on top of other elements */
+    }
+
+    /* Style for the Sign-Out Button */
+    #sign-out-btn {
+      position: fixed;
+      top: 130px; /* Adjusted to prevent overlap with the cart button */
+      right: 10px;
+      background-color: #ff4d4d; /* Change to your preferred color */
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    /* Make sure the header remains visible */
+    h1 {
+      margin-top: 70px; /* Adjust this to give space for floating buttons */
+    }
+  </style>
 </head>
 <body>
   <h1>Available Products for Loan</h1>
