@@ -106,7 +106,7 @@ h2 {
 #sign-out-btn {
     position: fixed;
     bottom: 20px;  /* Position 20px from the bottom */
-    left: 10px;    /* Position 10px from the left */
+    right: 10px;    /* Position 10px from the left */
     background-color: #5cb85c;
     color: white;
     border: none;
