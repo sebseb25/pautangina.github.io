@@ -169,9 +169,10 @@ h2 {
 
 /* Style for Labels (Updated color to match h2) */
 #filter-container label {
-    font-weight: bold;
-    margin-right: 10px;
-    color: #D9AE6A; /* Match h2 color */
+    color: #D9AE6A;
+    font-size: 24px;
+    font-weight: normal;
+    margin-left: 10px;
 }
 
 /* Style for Select dropdown */
@@ -186,7 +187,7 @@ h2 {
 
 /* Style for the search box */
 #search-box {
-    width: 200px;
+    width: 220px;
     padding: 8px;
     margin-top: 10px;
 }
