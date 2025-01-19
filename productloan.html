@@ -44,7 +44,7 @@
       <img src="https://via.placeholder.com/300" alt="Dell Laptop">
       <h2>Dell Laptop</h2>
       <p>Price: Php 45,000</p>
-      <button onclick="Details('details-2')">Show Details</button>
+      <button onclick="toggleDetails('details-2')">Show Details</button> <!-- Corrected here -->
       <div id="details-2" class="product-details">
         <p><strong>Brand:</strong> Dell</p>
         <p><strong>Model:</strong> Inspiron Series</p>
@@ -63,7 +63,7 @@
       <img src="https://via.placeholder.com/300" alt="Samsung Galaxy S23">
       <h2>Samsung Galaxy S23</h2>
       <p>Price: Php 58,990</p>
-      <button onclick="Details('details-3')">Show Details</button>
+      <button onclick="toggleDetails('details-3')">Show Details</button> <!-- Corrected here -->
       <div id="details-3" class="product-details">
         <p><strong>Brand:</strong> Samsung</p>
         <p><strong>Model:</strong> Galaxy S23</p>
@@ -125,12 +125,13 @@
         const detailsDiv = document.getElementById(detailsId);
         const button = detailsDiv.previousElementSibling; // The "Show Details" button
 
+        // If the details are hidden, show them
         if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
-          detailsDiv.style.display = 'block';
-          button.textContent = 'Hide Details';  // Change button text when details are shown
+          detailsDiv.style.display = 'block';  // Show the details
+          button.textContent = 'Hide Details';  // Change button text
         } else {
-          detailsDiv.style.display = 'none';
-          button.textContent = 'Show Details';  // Change button text when details are hidden
+          detailsDiv.style.display = 'none';   // Hide the details
+          button.textContent = 'Show Details';  // Change button text
         }
       };
 
