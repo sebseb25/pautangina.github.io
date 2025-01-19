@@ -84,6 +84,14 @@ h2 {
     background-color: #4cae4c;
 }
 
+.product ul {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+    left: 10px;
+}
+
+
 /* Cart Icon */
 #cart {
     position: fixed;
