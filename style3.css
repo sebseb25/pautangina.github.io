@@ -31,7 +31,7 @@ h2 {
 /* Product Grid */
 #product-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Ensure 3 columns in the grid */
+    grid-template-columns: repeat(3, 1fr); /* Always use 3 columns */
     gap: 20px;
     padding: 20px;
     padding-bottom: 80px;
@@ -48,6 +48,21 @@ h2 {
     #product-list {
         grid-template-columns: 1fr; /* Switch to 1 column on small screens */
     }
+}
+
+/* Product Card Styling (No Changes) */
+.product {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Ensure the grid layout visually fills rows even when not complete */
+.product:nth-child(3n+1) {
+    grid-column-start: auto;
+    grid-column-end: span 1;
 }
 
 .product {
