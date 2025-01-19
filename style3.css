@@ -157,3 +157,60 @@ h2 {
 #sign-out-btn:hover {
     background-color: #c9302c;
 }
+
+/* Filter Container */
+#filter-container {
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for Labels (Updated color to match h2) */
+#filter-container label {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #D9AE6A; /* Match h2 color */
+}
+
+/* Style for Select dropdown */
+#filter-container select,
+#filter-container input {
+    padding: 8px;
+    margin: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Style for the search box */
+#search-box {
+    width: 200px;
+    padding: 8px;
+    margin-top: 10px;
+}
+
+/* Add some space between the elements */
+#filter-container select,
+#filter-container input {
+    margin-bottom: 10px;
+}
+
+/* Responsive design: Adjust layout on smaller screens */
+@media (max-width: 600px) {
+    #filter-container {
+        display: block;
+    }
+
+    #filter-container label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    #filter-container select,
+    #filter-container input {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
