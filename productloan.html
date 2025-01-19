@@ -24,8 +24,8 @@
       <img src="https://www.smappliance.com/cdn/shop/files/10176055front_600x.jpg?v=1718340705" alt="Samsung 4K TV">
       <h2>SAMSUNG 65" Crystal UHD 4K Smart TV</h2>
       <p>Price: Php 40,990</p>
-      <button onclick="toggleDetails('details-1')">Show Details</button>
-      <div id="details-1" class="product-details">
+      <button onclick="toggleDetails('details-1', this)">Show Details</button>
+      <div id="details-1" class="product-details" style="display:none;">
         <p><strong>Brand:</strong> Samsung</p>
         <p><strong>Manufacturer:</strong> Samsung Electronics</p>
         <p><strong>Specifications:</strong></p>
@@ -44,8 +44,8 @@
       <img src="https://via.placeholder.com/300" alt="Dell Laptop">
       <h2>Dell Laptop</h2>
       <p>Price: Php 45,000</p>
-      <button onclick="toggleDetails('details-2')">Show Details</button> <!-- Corrected here -->
-      <div id="details-2" class="product-details">
+      <button onclick="toggleDetails('details-2', this)">Show Details</button>
+      <div id="details-2" class="product-details" style="display:none;">
         <p><strong>Brand:</strong> Dell</p>
         <p><strong>Model:</strong> Inspiron Series</p>
         <p><strong>Specifications:</strong></p>
@@ -63,8 +63,8 @@
       <img src="https://via.placeholder.com/300" alt="Samsung Galaxy S23">
       <h2>Samsung Galaxy S23</h2>
       <p>Price: Php 58,990</p>
-      <button onclick="toggleDetails('details-3')">Show Details</button> <!-- Corrected here -->
-      <div id="details-3" class="product-details">
+      <button onclick="toggleDetails('details-3', this)">Show Details</button>
+      <div id="details-3" class="product-details" style="display:none;">
         <p><strong>Brand:</strong> Samsung</p>
         <p><strong>Model:</strong> Galaxy S23</p>
         <p><strong>Specifications:</strong></p>
@@ -121,17 +121,15 @@
         window.location.href = "cart.html";
       });
 
-      window.toggleDetails = function(detailsId) {
+      window.toggleDetails = function(detailsId, button) {
         const detailsDiv = document.getElementById(detailsId);
-        const button = detailsDiv.previousElementSibling; // The "Show Details" button
 
-        // If the details are hidden, show them
         if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
-          detailsDiv.style.display = 'block';  // Show the details
-          button.textContent = 'Hide Details';  // Change button text
+          detailsDiv.style.display = 'block';
+          button.textContent = 'Hide Details'; // Change button text to 'Hide Details'
         } else {
-          detailsDiv.style.display = 'none';   // Hide the details
-          button.textContent = 'Show Details';  // Change button text
+          detailsDiv.style.display = 'none';
+          button.textContent = 'Show Details'; // Change button text back to 'Show Details'
         }
       };
 
