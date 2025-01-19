@@ -1,169 +1,249 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loan Calculator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            color: #333;
-            background-color: #00001C;
-            margin: 0;
-            padding: 0;
-        }
-        h1 {
-            color: #D9AE6A;
-            font-size: 36px;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        h2 {
-            color: #D9AE6A;
-            font-size: 24px;
-            font-weight: normal;
-            margin-left: 10px;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-            font-size: 1.1em;
-            color: #D9AE6A;
-            margin-left: 20px;
-        }
-        select, input, button {
-            font-size: 1em;
-            margin-top: 5px;
-            padding: 5px;
-            margin-left: 20px;
-        }
-        button {
-            background-color: #2980b9;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        button:hover {
-            background-color: #3498db;
-        }
-        .result {
-            margin-top: 20px;
-            font-weight: bold;
-            font-size: 1.2em;
-            color: #27ae60;
-            margin-left: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Listing</title>
+  <link rel="stylesheet" href="style3.css">
+
+  <style>
+    /* Ensure the rest of the layout works well */
+    body {
+      position: relative;
+    }
+  </style>
 </head>
 <body>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <img src="https://assets.softr-files.com/applications/5161fb19-ec3f-4962-b3b7-49c68eba0c5f/assets/25fa525f-cf79-4907-8efe-c0ed02c3bdde.png" alt="Logo">
-    <h1>Pautangina Loan Calculator</h1> <!-- Add your title here -->
-    <h2>Not sure about your loan? Feel free to use our loan calculator </h2>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <img src="https://assets.softr-files.com/applications/5161fb19-ec3f-4962-b3b7-49c68eba0c5f/assets/25fa525f-cf79-4907-8efe-c0ed02c3bdde.png" alt="Logo">
+  <h2>Available Products for Loan</h2>
 
-    <label for="loanType">Select Loan Type:</label>
-    <select id="loanType">
-        <option value="salary">Salary Loan</option>
-        <option value="product">Product Loan</option>
-    </select>
+  <!-- Cart Icon -->
+  <div id="cart">
+    🛒 <span id="cart-count">0</span>
+  </div>
 
-    <label for="loanAmountLabel">Loan Amount:</label>
-    <div id="loanAmountContainer">
-        <select id="loanAmount">
-            <option value="5000">Php 5,000</option>
-            <option value="6000">Php 6,000</option>
-            <option value="7000">Php 7,000</option>
-            <option value="8000">Php 8,000</option>
-            <option value="9000">Php 9,000</option>
-            <option value="10000">Php 10,000</option>
-            <option value="11000">Php 11,000</option>
-            <option value="12000">Php 12,000</option>
-            <option value="13000">Php 13,000</option>
-            <option value="14000">Php 14,000</option>
-            <option value="15000">Php 15,000</option>
-            <option value="16000">Php 16,000</option>
-            <option value="17000">Php 17,000</option>
-            <option value="18000">Php 18,000</option>
-            <option value="19000">Php 19,000</option>
-            <option value="20000">Php 20,000</option>
-        </select>
+  <!-- Sign-Out Button -->
+  <button id="sign-out-btn" style="display:none;">Sign Out</button>
+
+  <!-- Product Grid -->
+  <div id="product-list">
+    <!-- Product 1 -->
+    <div class="product" data-id="PHONE001">
+      <img src="https://i.imgur.com/N9D25OS.png" alt="iPhone14 256gb">
+      <h2>Apple iPhone 14</h2>
+      <p>Price: Php 45,490</p>
+      <button onclick="toggleDetails('details-1', this)">Show Details</button>
+      <div id="details-1" class="product-details" style="display:none;">
+        <p><strong>Product:</strong> iPhone</p>
+        <p><strong>Manufacturer:</strong> Apple</p>
+        <p><strong>Specifications:</strong></p>
+        <ul>
+          <li>Color: Starlight, Yellow, Blue</li>
+          <li>256gb</li>
+          <li>A15 chip</li>
+          <li>Shipping fee applies</li>
+        </ul>
+      </div>
+      <button onclick="addToCart('PHONE001', 'iPhone14', 45490)">Add to Cart</button>
     </div>
 
-    <label for="loanTerm">Loan Term (months):</label>
-    <input type="number" id="loanTerm" placeholder="Enter term">
+    <!-- Product 2 -->
+    <div class="product" data-id="PHONE002">
+      <img src="https://i.imgur.com/BEOB8nH.png" alt="iPhone15">
+      <h2>Apple iPhone 15</h2>
+      <p>Price: Php 44,990</p>
+      <button onclick="toggleDetails('details-2', this)">Show Details</button>
+      <div id="details-2" class="product-details" style="display:none;">
+       <p><strong>Product:</strong> iPhone</p>
+        <p><strong>Manufacturer:</strong> Apple</p>
+        <p><strong>Specifications:</strong></p>
+        <ul>
+          <li>Color: Black</li>
+          <li>128gb</li>
+          <li>A15 chip</li>
+          <li>Shipping fee applies</li>
+        </ul>
+      </div>
+      <button onclick="addToCart('PHONE002', 'iPhone15', 44990)">Add to Cart</button>
+    </div>
 
-    <button id="calculateButton">Calculate</button>
+    <!-- Product 3 -->
+    <div class="product" data-id="PHONE003">
+      <img src="https://i.imgur.com/2gCYlHi.png" alt="iPhone14 128gb">
+      <h2>Apple iPhone 14</h2>
+      <p>Price: Php 38,990</p>
+      <button onclick="toggleDetails('details-3', this)">Show Details</button>
+      <div id="details-3" class="product-details" style="display:none;">
+        <p><strong>Product:</strong> iPhone</p>
+        <p><strong>Manufacturer:</strong> Apple</p>
+        <p><strong>Specifications:</strong></p>
+        <ul>
+          <li>Color: Midnight, Blue</li>
+          <li>128gb</li>
+          <li>A15 chip</li>
+          <li>Shipping fee applies</li>
+        </ul>
+      </div>
+      <button onclick="addToCart('PHONE003', 'iPhone14128', 38990)">Add to Cart</button>
+    </div>
+    
+      <!-- Product 4 -->
+    <div class="product" data-id="PHONE004">
+      <img src="https://i.imgur.com/q0eYRhV.png" alt="OPPO Reno11 Pro">
+      <h2>OPPO Reno11 Pro</h2>
+      <p>Price: Php 35,499</p>
+      <button onclick="toggleDetails('details-4', this)">Show Details</button>
+      <div id="details-4" class="product-details" style="display:none;">
+        <p><strong>Product:</strong> Smartphone</p>
+        <p><strong>Manufacturer:</strong> OPPO</p>
+        <p><strong>Specifications:</strong></p>
+        <ul>
+          <li>Color: Pearl White</li>
+          <li>512gb</li>
+          <li>MTK 8200</li>
+          <li>4600mAh</li>
+          <li>Shipping fee applies</li>
+        </ul>
+      </div>
+      <button onclick="addToCart('PHONE004', 'OPPO Reno11 Pro', 35499)">Add to Cart</button>
+    </div>
 
-    <div class="result" id="result"></div>
+      <!-- Product 5  -->
+    <div class="product" data-id="PHONE005">
+      <img src="https://i.imgur.com/mtAZBJB.png" alt="iPhone12 64gb">
+      <h2>Apple iPhone 12</h2>
+      <p>Price: Php 33,590</p>
+      <button onclick="toggleDetails('details-5', this)">Show Details</button>
+      <div id="details-5" class="product-details" style="display:none;">
+        <p><strong>Product:</strong> iPhone</p>
+        <p><strong>Manufacturer:</strong> Apple</p>
+        <p><strong>Specifications:</strong></p>
+        <ul>
+          <li>Color: Blue</li>
+          <li>64gb</li>
+          <li>A14 chip</li>
+          <li>Shipping fee applies</li>
+        </ul>
+      </div>
+      <button onclick="addToCart('PHONE005', 'iPhone12 64gb', 33590)">Add to Cart</button>
+    </div>
 
-    <script>
-        document.getElementById('loanType').addEventListener('change', function() {
-            const loanType = document.getElementById('loanType').value;
-            const loanAmountContainer = document.getElementById('loanAmountContainer');
+      <!-- Product 6 -->
+    <div class="product" data-id="SMRTPHN01">
+      <img src="https://via.placeholder.com/300" alt="Samsung Galaxy S23">
+      <h2>Samsung Galaxy S23</h2>
+      <p>Price: Php 58,990</p>
+      <button onclick="toggleDetails('details-6', this)">Show Details</button>
+      <div id="details-6" class="product-details" style="display:none;">
+        <p><strong>Brand:</strong> Samsung</p>
+        <p><strong>Model:</strong> Galaxy S23</p>
+        <p><strong>Specifications:</strong></p>
+        <ul>
+          <li>Color: Phantom Black</li>
+          <li>Storage: 256GB</li>
+          <li>Battery: 3900mAh</li>
+          <li>Camera: 50MP</li>
+        </ul>
+      </div>
+      <button onclick="addToCart('SMRTPHN01', 'Samsung Galaxy S23', 58990)">Add to Cart</button>
+    </div>
 
-            // Clear existing content
-            loanAmountContainer.innerHTML = '';
+      <!-- Product 3 -->
+    <div class="product" data-id="SMRTPHN01">
+      <img src="https://via.placeholder.com/300" alt="Samsung Galaxy S23">
+      <h2>Samsung Galaxy S23</h2>
+      <p>Price: Php 58,990</p>
+      <button onclick="toggleDetails('details-7', this)">Show Details</button>
+      <div id="details-7" class="product-details" style="display:none;">
+        <p><strong>Brand:</strong> Samsung</p>
+        <p><strong>Model:</strong> Galaxy S23</p>
+        <p><strong>Specifications:</strong></p>
+        <ul>
+          <li>Color: Phantom Black</li>
+          <li>Storage: 256GB</li>
+          <li>Battery: 3900mAh</li>
+          <li>Camera: 50MP</li>
+        </ul>
+      </div>
+      <button onclick="addToCart('SMRTPHN01', 'Samsung Galaxy S23', 58990)">Add to Cart</button>
+    </div>
+  </div>
 
-            if (loanType === 'salary') {
-                const select = document.createElement('select');
-                select.id = 'loanAmount';
-                [5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000].forEach(amount => {
-                    const option = document.createElement('option');
-                    option.value = amount;
-                    option.textContent = amount;
-                    select.appendChild(option);
-                });
-                loanAmountContainer.appendChild(select);
-            } else if (loanType === 'product') {
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.id = 'loanAmount';
-                input.placeholder = 'Enter amount';
-                loanAmountContainer.appendChild(input);
-            }
+  <!-- Firebase and Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6WHRzPz5kpF39K0U-RwB6Q-8DySMJ0uM",
+      authDomain: "pautangina-6f0ab.firebaseapp.com",
+      projectId: "pautangina-6f0ab",
+      storageBucket: "pautangina-6f0ab.firebasestorage.app",
+      messagingSenderId: "981514614207",
+      appId: "1:981514614207:web:ad7f106d68991920ff5d0a",
+      measurementId: "G-99917HK00J"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let cart = [];
+
+    document.addEventListener("DOMContentLoaded", function() {
+      // Load cart from localStorage if available
+      const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart = savedCart;
+      updateCartDisplay();
+
+      window.addToCart = function(productId, productName, productPrice) {
+        const product = { productId, productName, productPrice };
+        cart.push(product);
+        updateCartDisplay();
+      };
+
+      function updateCartDisplay() {
+        const cartCount = document.getElementById('cart-count');
+        cartCount.textContent = cart.length;
+      }
+
+      document.getElementById('cart').addEventListener('click', function() {
+        localStorage.setItem("cart", JSON.stringify(cart));
+        window.location.href = "cart.html";
+      });
+
+      window.toggleDetails = function(detailsId, button) {
+        const detailsDiv = document.getElementById(detailsId);
+
+        if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+          detailsDiv.style.display = 'block';
+          button.textContent = 'Hide Details'; // Change button text to 'Hide Details'
+        } else {
+          detailsDiv.style.display = 'none';
+          button.textContent = 'Show Details'; // Change button text back to 'Show Details'
+        }
+      };
+
+      window.handleSignOut = function() {
+        signOut(auth).then(() => {
+          window.location.href = '/pautangina.github.io/index.html';
+        }).catch(error => {
+          console.error('Error during sign-out:', error);
         });
+      };
 
-        document.getElementById('calculateButton').addEventListener('click', function() {
-            const loanType = document.getElementById('loanType').value;
-            const loanAmountElement = document.getElementById('loanAmount');
-            const loanAmount = parseFloat(loanAmountElement.value);
-            const loanTerm = parseInt(document.getElementById('loanTerm').value);
-            const resultDiv = document.getElementById('result');
-
-            if (isNaN(loanAmount) || isNaN(loanTerm)) {
-                resultDiv.textContent = "Please enter valid loan amount and term.";
-                return;
-            }
-
-            const interestRate = 0.04; // 4% monthly
-            let maxLoanTerm;
-
-            if (loanType === 'salary') {
-                maxLoanTerm = 3;
-
-                if (loanTerm < 1 || loanTerm > maxLoanTerm) {
-                    resultDiv.textContent = `For Salary Loan, the term must be between 1 and ${maxLoanTerm} months.`;
-                    return;
-                }
-            } else if (loanType === 'product') {
-                maxLoanTerm = 6;
-
-                if (loanTerm < 1 || loanTerm > maxLoanTerm) {
-                    resultDiv.textContent = `For Product Loan, the term must be between 1 and ${maxLoanTerm} months.`;
-                    return;
-                }
-            }
-
-            const totalInterest = loanAmount * interestRate * loanTerm;
-            const totalRepayment = loanAmount + totalInterest;
-            const semiMonthlyPayment = totalRepayment / (loanTerm * 2);
-
-            resultDiv.textContent = `Total Repayment: PHP ${totalRepayment.toFixed(2)} | Semi-Monthly Payment: PHP ${semiMonthlyPayment.toFixed(2)}`;
-        });
-    </script>
+      onAuthStateChanged(auth, (user) => {
+        const signOutBtn = document.getElementById('sign-out-btn');
+        if (user) {
+          signOutBtn.style.display = 'block';
+          signOutBtn.onclick = handleSignOut;
+        } else {
+          signOutBtn.style.display = 'none';
+        }
+      });
+    });
+  </script>
 </body>
 </html>
