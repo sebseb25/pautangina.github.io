@@ -162,7 +162,7 @@ h2 {
 #filter-container {
     margin: 20px 0;
     padding: 10px;
-    background-color: #f4f4f4;
+    background-color: #00001C;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -171,7 +171,6 @@ h2 {
 #filter-container label {
     color: #D9AE6A;
     background-color: #00001C
-    font-size: 24px;
     font-weight: normal;
     margin-left: 10px;
 }
