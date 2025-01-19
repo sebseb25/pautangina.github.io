@@ -104,15 +104,18 @@ h2 {
 /* Sign-Out Button */
 #sign-out-btn {
     position: fixed;
-    bottom: 15px;
-    left: 15px;
-    padding: 10px 20px;
-    background-color: #d9534f;
+    bottom: 20px;  /* Position 20px from the bottom */
+    left: 10px;    /* Position 10px from the left */
+    background-color: #5cb85c;
     color: white;
     border: none;
+    padding: 10px 15px;
     border-radius: 5px;
-    font-size: 16px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    height: auto; /* Ensure the height adjusts based on content */
+    min-height: 40px; /* Set a minimum height if desired */
 }
 
 #sign-out-btn:hover {
