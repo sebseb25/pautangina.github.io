@@ -6,77 +6,166 @@
   <title>Cart</title>
   <link rel="stylesheet" href="style3.css">
   <style>
-    /* Style the checkout page */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 20px;
+      background-color: #2e3a59;
+      color: white;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    #cart-items {
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #f1f1f1;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-item p {
+      margin: 5px 0;
+    }
+
+    .cart-item button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .cart-item button:hover {
+      background-color: #c0392b;
+    }
+
+    .total-price {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
     label {
       display: block;
-      margin-top: 10px;
+      margin: 10px 0 5px;
+      font-weight: bold;
     }
 
     input, select {
       width: 100%;
-      padding: 8px;
-      margin: 5px 0;
+      padding: 10px;
+      margin-bottom: 15px;
       border-radius: 4px;
       border: 1px solid #ccc;
     }
 
     button {
-      margin-top: 20px;
+      background-color: #2e3a59;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
     }
 
-    .cart-item {
-      margin-bottom: 15px;
+    button:hover {
+      background-color: #1a2536;
+    }
+
+    #back-to-products {
+      background-color: #95a5a6;
+      margin-top: 10px;
+    }
+
+    #back-to-products:hover {
+      background-color: #7f8c8d;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 1.5em;
+        padding: 10px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Your Cart</h1>
 
-  <!-- Cart Items will be dynamically populated here -->
-  <div id="cart-items"></div>
+  <div class="container">
+    <h1>Your Cart</h1>
 
-  <p id="total-price">Total: Php 0</p>
+    <!-- Cart Items will be dynamically populated here -->
+    <div id="cart-items"></div>
 
-  <!-- Loan Term Selection -->
-  <label for="loan-term">Select Loan Term:</label>
-  <select id="loan-term">
-    <option value="1">1 Month</option>
-    <option value="2">2 Months</option>
-    <option value="3">3 Months</option>
-    <option value="4">4 Months</option>
-    <option value="5">5 Months</option>
-    <option value="6">6 Months</option>
-  </select>
+    <p id="total-price" class="total-price">Total: Php 0</p>
 
-  <!-- New Fields for Checkout -->
-  <label for="full-name">Full Name:</label>
-  <input type="text" id="full-name" placeholder="Enter your full name">
+    <!-- Loan Term Selection -->
+    <label for="loan-term">Select Loan Term:</label>
+    <select id="loan-term">
+      <option value="1">1 Month</option>
+      <option value="2">2 Months</option>
+      <option value="3">3 Months</option>
+      <option value="4">4 Months</option>
+      <option value="5">5 Months</option>
+      <option value="6">6 Months</option>
+    </select>
 
-  <label for="email">Email Address:</label>
-  <input type="text" id="email" placeholder="Enter your email address">
+    <!-- New Fields for Checkout -->
+    <label for="full-name">Full Name:</label>
+    <input type="text" id="full-name" placeholder="Enter your full name">
 
-  <label for="address">Address:</label>
-  <input type="text" id="address" placeholder="Enter your address">
+    <label for="email">Email Address:</label>
+    <input type="text" id="email" placeholder="Enter your email address">
 
-  <label for="phone">Phone Number:</label>
-  <input type="text" id="phone" placeholder="Enter your phone number">
+    <label for="address">Address:</label>
+    <input type="text" id="address" placeholder="Enter your address">
 
-  <label for="department">Department:</label>
-  <select id="department">
-    <option value="Financials">Financials</option>
-    <option value="Blooms">Blooms</option>
-    <option value="QID">QID</option>
-    <option value="HR">HR</option>
-    <option value="Admin">Admin</option>
-  </select>
+    <label for="phone">Phone Number:</label>
+    <input type="text" id="phone" placeholder="Enter your phone number">
 
-  <label for="team">Team:</label>
-  <input type="text" id="team" placeholder="Enter your team name">
+    <label for="department">Department:</label>
+    <select id="department">
+      <option value="Financials">Financials</option>
+      <option value="Blooms">Blooms</option>
+      <option value="QID">QID</option>
+      <option value="HR">HR</option>
+      <option value="Admin">Admin</option>
+    </select>
 
-  <button onclick="submitOrder()">Submit</button>
+    <label for="team">Team:</label>
+    <input type="text" id="team" placeholder="Enter your team name">
 
-  <!-- Button to go back to productloan.html -->
-  <button id="back-to-products">Back to Products</button>
+    <button onclick="submitOrder()">Submit</button>
+
+    <!-- Button to go back to productloan.html -->
+    <button id="back-to-products">Back to Products</button>
+  </div>
 
   <!-- Firebase Modules as ES Modules -->
   <script type="module">
@@ -176,5 +265,6 @@
     // Initial render
     renderCart();
   </script>
+
 </body>
 </html>
