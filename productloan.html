@@ -26,11 +26,37 @@
 
   <!-- Sign-Out Button -->
   <button id="sign-out-btn" style="display:none;">Sign Out</button>
+  
+  <!-- Filters and Search -->
+  <div id="filter-container">
+    <label for="category-filter">Filter by Category:</label>
+    <select id="category-filter" onchange="applyFilters()">
+      <option value="all">All</option>
+      <option value="gadget">Gadget</option>
+      <option value="appliance">Appliance</option>
+    </select>
+
+    <label for="type-filter">Filter by Type:</label>
+    <select id="type-filter" onchange="applyFilters()">
+      <option value="all">All</option>
+      <option value="smartphone">Smartphone</option>
+      <option value="tablet">Tablet</option>
+      <option value="pc-laptop">PC / Laptop</option>
+      <option value="entertainment">Entertainment</option>
+      <option value="home-cleaning">Home Cleaning</option>
+      <option value="kitchen">Kitchen</option>
+      <option value="home-comfort">Home Comfort</option>
+    </select>
+    
+    <label for="search-box">Search:</label>
+    <input type="text" id="search-box" placeholder="Search for a product..." oninput="applyFilters()">
+  </div>  
+  
 
   <!-- Product Grid -->
   <div id="product-list">
     <!-- Product 1 -->
-    <div class="product" data-id="PHONE001">
+    <div class="product" data-id="PHONE001" data-category="gadget" data-type="smartphone">
       <img src="https://i.imgur.com/N9D25OS.png" alt="iPhone14 256gb">
       <h2>Apple iPhone 14</h2>
       <p>Price: Php 45,490</p>
@@ -50,7 +76,7 @@
     </div>
 
     <!-- Product 2 -->
-    <div class="product" data-id="PHONE002">
+    <div class="product" data-id="PHONE002" data-category="gadget" data-type="smartphone">
       <img src="https://i.imgur.com/BEOB8nH.png" alt="iPhone15">
       <h2>Apple iPhone 15</h2>
       <p>Price: Php 44,990</p>
@@ -70,7 +96,7 @@
     </div>
 
     <!-- Product 3 -->
-    <div class="product" data-id="PHONE003">
+    <div class="product" data-id="PHONE003" data-category="gadget" data-type="smartphone">
       <img src="https://i.imgur.com/2gCYlHi.png" alt="iPhone14 128gb">
       <h2>Apple iPhone 14</h2>
       <p>Price: Php 38,990</p>
@@ -90,7 +116,7 @@
     </div>
     
       <!-- Product 4 -->
-    <div class="product" data-id="PHONE004">
+    <div class="product" data-id="PHONE004" data-category="gadget" data-type="smartphone">
       <img src="https://i.imgur.com/q0eYRhV.png" alt="OPPO Reno11 Pro">
       <h2>OPPO Reno11 Pro</h2>
       <p>Price: Php 35,499</p>
@@ -111,7 +137,7 @@
     </div>
 
       <!-- Product 5  -->
-    <div class="product" data-id="PHONE005">
+    <div class="product" data-id="PHONE005" data-category="gadget" data-type="smartphone">
       <img src="https://i.imgur.com/mtAZBJB.png" alt="iPhone12 64gb">
       <h2>Apple iPhone 12</h2>
       <p>Price: Php 33,590</p>
@@ -131,7 +157,7 @@
     </div>
 
       <!-- Product 6 -->
-    <div class="product" data-id="SMRTPHN01">
+    <div class="product" data-id="CLEANING001" data-category="appliance" data-type="home-cleaning">
       <img src="https://via.placeholder.com/300" alt="Samsung Galaxy S23">
       <h2>Samsung Galaxy S23</h2>
       <p>Price: Php 58,990</p>
@@ -240,9 +266,12 @@
           signOutBtn.onclick = handleSignOut;
         } else {
           signOutBtn.style.display = 'none';
-        }
+         }
       });
     });
   </script>
+
+  <!-- Link to filter.js -->
+  <script src="filter.js"></script>
 </body>
 </html>
