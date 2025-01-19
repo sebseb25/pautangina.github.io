@@ -170,9 +170,8 @@ h2 {
 /* Style for Labels (Updated color to match h2) */
 #filter-container label {
     color: #D9AE6A;
-    background-color: #00001C
     font-weight: normal;
-    margin-left: 10px;
+    margin-left: 15px;
 }
 
 /* Style for Select dropdown */
