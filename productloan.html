@@ -5,92 +5,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Listing</title>
   <link rel="stylesheet" href="style3.css">
-  <style>
-    /* Ensure the sign-out button is placed in the top right corner */
-    #sign-out-btn {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      padding: 10px 20px;
-      background-color: red;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    #sign-out-btn:hover {
-      background-color: darkred;
-    }
-
-    /* Style for the form inputs */
-    label {
-      display: block;
-      margin-top: 10px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 8px;
-      margin: 5px 0;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      margin-top: 20px;
-    }
-
-    /* Hide product details initially */
-    .product-details {
-      display: none;
-    }
-  </style>
 </head>
 <body>
   <h1>Available Products for Loan</h1>
 
+  <!-- Cart Icon -->
+  <div id="cart">
+    🛒 <span id="cart-count">0</span>
+  </div>
+
+  <!-- Sign-Out Button -->
+  <button id="sign-out-btn" style="display:none;">Sign Out</button>
+
+  <!-- Product Grid -->
   <div id="product-list">
-    <!-- Example Product 1 -->
+    <!-- Product 1 -->
     <div class="product" data-id="SMRTTV02">
-      <h2>UA65DU8000GXXP SAMSUNG 65" CRYSTAL UHD 4K SMART TV</h2>
-      <img src="https://www.smappliance.com/cdn/shop/files/10176055front_600x.jpg?v=1718340705" alt="TV01" class="product-image">
+      <img src="https://www.smappliance.com/cdn/shop/files/10176055front_600x.jpg?v=1718340705" alt="Samsung 4K TV">
+      <h2>SAMSUNG 65" Crystal UHD 4K Smart TV</h2>
       <p>Price: Php 40,990</p>
-      <button onclick="toggleDetails(1)">Show Details</button>
+      <button onclick="toggleDetails('details-1')">Show Details</button>
       <div id="details-1" class="product-details">
         <p><strong>Brand:</strong> Samsung</p>
         <p><strong>Manufacturer:</strong> Samsung Electronics</p>
         <p><strong>Specifications:</strong></p>
         <ul>
           <li>Color: TITAN GRAY</li>
-          <li>Gross Dimensions (WxHxD): 1612 x 950 x 164 mm</li>
+          <li>Dimensions: 1612 x 950 x 164 mm</li>
           <li>4K Upscaling</li>
           <li>AirSlim Design</li>
         </ul>
       </div>
-      <button onclick="addToCart('SMRTTV02', 'TV0001', 40990)">Add to Cart</button>
+      <button onclick="addToCart('SMRTTV02', 'Samsung 4K TV', 40990)">Add to Cart</button>
     </div>
 
-    <!-- Example Product 2 -->
-    <div class="product" data-id="2">
-      <h2>Dell Laptop 01</h2>
+    <!-- Product 2 -->
+    <div class="product" data-id="DELL001">
+      <img src="https://via.placeholder.com/300" alt="Dell Laptop">
+      <h2>Dell Laptop</h2>
       <p>Price: Php 45,000</p>
-      <button onclick="addToCart(2, 'Product 2', 45000)">Add to Cart</button>
+      <button onclick="toggleDetails('details-2')">Show Details</button>
+      <div id="details-2" class="product-details">
+        <p><strong>Brand:</strong> Dell</p>
+        <p><strong>Model:</strong> Inspiron Series</p>
+        <p><strong>Specifications:</strong></p>
+        <ul>
+          <li>Processor: Intel Core i7</li>
+          <li>RAM: 16GB</li>
+          <li>Storage: 512GB SSD</li>
+        </ul>
+      </div>
+      <button onclick="addToCart('DELL001', 'Dell Laptop', 45000)">Add to Cart</button>
     </div>
-    <!-- Add more products here -->
+
+    <!-- Product 3 -->
+    <div class="product" data-id="SMRTPHN01">
+      <img src="https://via.placeholder.com/300" alt="Samsung Galaxy S23">
+      <h2>Samsung Galaxy S23</h2>
+      <p>Price: Php 58,990</p>
+      <button onclick="toggleDetails('details-3')">Show Details</button>
+      <div id="details-3" class="product-details">
+        <p><strong>Brand:</strong> Samsung</p>
+        <p><strong>Model:</strong> Galaxy S23</p>
+        <p><strong>Specifications:</strong></p>
+        <ul>
+          <li>Color: Phantom Black</li>
+          <li>Storage: 256GB</li>
+          <li>Battery: 3900mAh</li>
+          <li>Camera: 50MP</li>
+        </ul>
+      </div>
+      <button onclick="addToCart('SMRTPHN01', 'Samsung Galaxy S23', 58990)">Add to Cart</button>
+    </div>
   </div>
 
-  <!-- Cart Icon -->
-  <div id="cart">
-    <span id="cart-icon">🛒</span>
-    <span id="cart-count">0</span> items in cart
-  </div>
-
-  <!-- Sign-Out Button -->
-  <button id="sign-out-btn" style="display:none;">Sign Out</button>
-
-  <!-- Firebase Modules as ES Modules -->
+  <!-- Firebase and Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
@@ -110,40 +99,31 @@
 
     let cart = [];
 
-    // Wait for the DOM to be fully loaded before running any script
     document.addEventListener("DOMContentLoaded", function() {
-      // Expose the addToCart function to the global scope
+      // Load cart from localStorage if available
+      const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart = savedCart;
+      updateCartDisplay();
+
       window.addToCart = function(productId, productName, productPrice) {
         const product = { productId, productName, productPrice };
         cart.push(product);
         updateCartDisplay();
       };
 
-      // Update the cart display (cart count and checkout button)
       function updateCartDisplay() {
         const cartCount = document.getElementById('cart-count');
         cartCount.textContent = cart.length;
       }
 
-      // Redirect to cart.html when cart icon is clicked
-      document.getElementById('cart-icon').addEventListener('click', function() {
-        localStorage.setItem("cart", JSON.stringify(cart)); // Save the cart to localStorage
+      document.getElementById('cart').addEventListener('click', function() {
+        localStorage.setItem("cart", JSON.stringify(cart));
         window.location.href = "cart.html";
       });
 
-      // Sign-out function
-      window.handleSignOut = function() {
-        signOut(auth).then(() => {
-          window.location.href = '/pautangina.github.io/index.html'; // Adjust to your redirect URL
-        }).catch(error => {
-          console.error('Error during sign-out:', error);
-        });
-      }
-
-      // Toggle product details visibility
-      window.toggleDetails = function(productId) {
-        const detailsDiv = document.getElementById(`details-${productId}`);
-        const button = detailsDiv.previousElementSibling; // The Show Details button
+      window.toggleDetails = function(detailsId) {
+        const detailsDiv = document.getElementById(detailsId);
+        const button = detailsDiv.previousElementSibling; // The "Show Details" button
 
         if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
           detailsDiv.style.display = 'block';
@@ -154,7 +134,14 @@
         }
       };
 
-      // Initialize Firebase Auth State Listener
+      window.handleSignOut = function() {
+        signOut(auth).then(() => {
+          window.location.href = '/pautangina.github.io/index.html';
+        }).catch(error => {
+          console.error('Error during sign-out:', error);
+        });
+      };
+
       onAuthStateChanged(auth, (user) => {
         const signOutBtn = document.getElementById('sign-out-btn');
         if (user) {
@@ -164,11 +151,6 @@
           signOutBtn.style.display = 'none';
         }
       });
-
-      // Load the cart from localStorage on page load and update cart count
-      const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-      cart = savedCart;
-      updateCartDisplay();
     });
   </script>
 </body>
