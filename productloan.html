@@ -19,18 +19,23 @@
       z-index: 1000; /* Ensures it is on top of other elements */
     }
 
-    /* Style for the Sign-Out Button */
+      /* Sign-Out Button (neatly aligned in the top-right corner) */
     #sign-out-btn {
-      position: fixed;
-      top: 130px; /* Adjusted to maintain proper spacing between buttons */
-      right: 10px;
-      background-color: #ff4d4d; /* Change to your preferred color */
+      position: absolute;
+      top: 20px;  /* Set distance from the top */
+      right: 20px; /* Set distance from the right */
+      background-color: #ff4d4d; /* Customize button color */
       color: white;
-      padding: 8px 16px; /* Set padding to ensure appropriate button size */
+      padding: 8px 16px;  /* Proper padding to make it neat */
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      z-index: 1000;
+      z-index: 1000; /* Ensures button stays on top */
+    }
+
+    /* Ensure the rest of the layout works well */
+    body {
+      position: relative;
     }
 
     /* Make sure the header remains visible */
