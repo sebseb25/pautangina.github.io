@@ -1,11 +1,14 @@
 document.addEventListener("DOMContentLoaded", function() {
     const productList = document.getElementById("product-list");
-    const allProducts = Array.from(productList.getElementsByClassName("product"));
 
+    // Function to apply filters based on category, type, and search query
     function applyFilters() {
       const categoryFilter = document.getElementById("category-filter").value;
       const typeFilter = document.getElementById("type-filter").value;
       const searchQuery = document.getElementById("search-box").value.toLowerCase();
+
+      // Loop through each product and apply the filters
+      const allProducts = Array.from(productList.getElementsByClassName("product"));
 
       allProducts.forEach(product => {
         const category = product.dataset.category || "";
@@ -26,26 +29,11 @@ document.addEventListener("DOMContentLoaded", function() {
       });
     }
 
-    // Example product metadata (update your HTML accordingly)
-    allProducts.forEach(product => {
-      // Add dataset attributes for category and type
-      if (product.dataset.id === "PHONE001" || product.dataset.id === "PHONE002") {
-        product.dataset.category = "gadget";
-        product.dataset.type = "smartphone";
-      } else if (product.dataset.id === "PHONE003") {
-        product.dataset.category = "gadget";
-        product.dataset.type = "smartphone";
-      } else if (product.dataset.id === "PHONE004") {
-        product.dataset.category = "gadget";
-        product.dataset.type = "smartphone";
-      } else if (product.dataset.id === "PHONE005") {
-        product.dataset.category = "gadget";
-        product.dataset.type = "smartphone";
-      } else if (product.dataset.id === "SMRTPHN01") {
-        product.dataset.category = "gadget";
-        product.dataset.type = "smartphone";
-      }
-    });
+    // Listen for filter changes
+    document.getElementById("category-filter").addEventListener("change", applyFilters);
+    document.getElementById("type-filter").addEventListener("change", applyFilters);
+    document.getElementById("search-box").addEventListener("input", applyFilters);
 
     window.applyFilters = applyFilters; // Expose function globally
+
 });
