@@ -67,7 +67,6 @@
     const auth = getAuth(app);
 
     let cart = [];
-    let allProducts = [];  // Global variable to store all products
 
     // Google Sheets API Integration
     const SPREADSHEET_ID = '1tUBj7jJaxtr1UnhbxusQq_ATFSPFzAV8h5rVHiqE-mo';  // Replace with your actual spreadsheet ID
@@ -78,125 +77,82 @@
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/ProductInventory!A:H?key=${API_KEY}`;
 
       fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          const rows = data.values;
-          allProducts = [];  // Reset the allProducts array
-
-          rows.forEach((row, index) => {
-            if (index === 0) return; // Skip header row
-
-            const [className, dataId, dataCategory, dataType, imgSrc, alt, price, specifications] = row;
-
-            const product = {
-              className,
-              dataId,
-              dataCategory,
-              dataType,
-              imgSrc,
-              alt,
-              price,
-              specifications
-            };
-
-            allProducts.push(product); // Store all products in the array
-            // Create and display the product elements
-            const productDiv = createProductElement(product);
-            document.getElementById('product-list').appendChild(productDiv);
-          });
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+          }
+          return response.json();
         })
-        .catch(error => console.error('Error fetching product data:', error));
-    }
+        .then(data => {
+          if (data.values) {
+            const rows = data.values;
+            rows.forEach((row, index) => {
+              if (index === 0) return; // Skip header row
 
-    // Helper function to create a product element
-    function createProductElement(product) {
-      const productDiv = document.createElement('div');
-      productDiv.classList.add('product');
-      productDiv.setAttribute('data-id', product.dataId);
-      productDiv.setAttribute('data-category', product.dataCategory);
-      productDiv.setAttribute('data-type', product.dataType);
+              const [className, dataId, dataCategory, dataType, imgSrc, alt, price, specifications] = row;
 
-      const productImg = document.createElement('img');
-      productImg.src = product.imgSrc;
-      productImg.alt = product.alt;
+              const productDiv = document.createElement('div');
+              productDiv.classList.add('product');
+              productDiv.setAttribute('data-id', dataId);
+              productDiv.setAttribute('data-category', dataCategory);
+              productDiv.setAttribute('data-type', dataType);
 
-      const productTitle = document.createElement('h2');
-      productTitle.textContent = product.alt;
+              const productImg = document.createElement('img');
+              productImg.src = imgSrc;
+              productImg.alt = alt;
 
-      const productPrice = document.createElement('p');
-      productPrice.textContent = `Price: Php ${product.price}`;
+              const productTitle = document.createElement('h2');
+              productTitle.textContent = alt;
 
-      const detailsButton = document.createElement('button');
-      detailsButton.textContent = 'Show Details';
-      detailsButton.onclick = function () {
-        toggleDetails(`details-${product.dataId}`, this);
-      };
+              const productPrice = document.createElement('p');
+              productPrice.textContent = `Price: Php ${price}`;
 
-      const productDetails = document.createElement('div');
-      productDetails.id = `details-${product.dataId}`;
-      productDetails.classList.add('product-details');
-      productDetails.style.display = 'none';
-      productDetails.innerHTML = `
-        <p><strong>Product:</strong> ${product.alt}</p>
-        <p><strong>Manufacturer:</strong> Manufacturer Name</p>
-        <p><strong>Specifications:</strong></p>
-        <ul>
-          ${product.specifications.split(',').map(spec => `<li>${spec.trim()}</li>`).join('')}
-        </ul>
-      `;
+              const detailsButton = document.createElement('button');
+              detailsButton.textContent = 'Show Details';
+              detailsButton.onclick = function () {
+                toggleDetails(`details-${dataId}`, this);
+              };
 
-      const addToCartButton = document.createElement('button');
-      addToCartButton.textContent = 'Add to Cart';
-      addToCartButton.onclick = function () {
-        addToCart(product.dataId, product.alt, product.price);
-      };
+              const productDetails = document.createElement('div');
+              productDetails.id = `details-${dataId}`;
+              productDetails.classList.add('product-details');
+              productDetails.style.display = 'none';
+              productDetails.innerHTML = ` 
+                <p><strong>Product:</strong> ${alt}</p>
+                <p><strong>Manufacturer:</strong> Manufacturer Name</p>
+                <p><strong>Specifications:</strong></p>
+                <ul>
+                  ${specifications.split(',').map(spec => `<li>${spec.trim()}</li>`).join('')}
+                </ul>
+              `;
 
-      productDiv.appendChild(productImg);
-      productDiv.appendChild(productTitle);
-      productDiv.appendChild(productPrice);
-      productDiv.appendChild(detailsButton);
-      productDiv.appendChild(productDetails);
-      productDiv.appendChild(addToCartButton);
+              const addToCartButton = document.createElement('button');
+              addToCartButton.textContent = 'Add to Cart';
+              addToCartButton.onclick = function () {
+                addToCart(dataId, alt, price);
+              };
 
-      return productDiv;
-    }
+              productDiv.appendChild(productImg);
+              productDiv.appendChild(productTitle);
+              productDiv.appendChild(productPrice);
+              productDiv.appendChild(detailsButton);
+              productDiv.appendChild(productDetails);
+              productDiv.appendChild(addToCartButton);
 
-    // Function to apply filters including the search term
-    function applyFilters() {
-      const searchTerm = document.getElementById('search-box').value.toLowerCase();
-      const categoryFilter = document.getElementById('category-filter').value;
-      const typeFilter = document.getElementById('type-filter').value;
-
-      console.log("Filtering with search term:", searchTerm); // Debugging
-
-      // Filter the products based on search term (alt), category, and type
-      const filteredProducts = allProducts.filter(product => {
-        const matchesSearch = product.alt.toLowerCase().includes(searchTerm); // Search based on 'alt'
-        const matchesCategory = categoryFilter === 'all' || product.dataCategory === categoryFilter;
-        const matchesType = typeFilter === 'all' || product.dataType === typeFilter;
-
-        return matchesSearch && matchesCategory && matchesType;
-      });
-
-      // Clear current product list
-      const productListDiv = document.getElementById('product-list');
-      productListDiv.innerHTML = '';
-
-      // Append filtered products
-      if (filteredProducts.length === 0) {
-        productListDiv.innerHTML = '<p>No products found.</p>';
-      } else {
-        filteredProducts.forEach(product => {
-          const productDiv = createProductElement(product);
-          productListDiv.appendChild(productDiv);
+              document.getElementById('product-list').appendChild(productDiv);
+            });
+          } else {
+            console.error("No data found in the response.");
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching product data:', error);
+          alert("Failed to load product data. Please try again later.");
         });
-      }
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-      fetchProductData();  // Fetch product data from Google Sheets
-
-      // Cart functionality
+      // Load cart from localStorage if available
       const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
       cart = savedCart;
       updateCartDisplay();
@@ -216,6 +172,38 @@
         localStorage.setItem("cart", JSON.stringify(cart));
         window.location.href = "cart.html";
       });
+
+      window.toggleDetails = function (detailsId, button) {
+        const detailsDiv = document.getElementById(detailsId);
+
+        if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+          detailsDiv.style.display = 'block';
+          button.textContent = 'Hide Details'; // Change button text to 'Hide Details'
+        } else {
+          detailsDiv.style.display = 'none';
+          button.textContent = 'Show Details'; // Change button text back to 'Show Details'
+        }
+      };
+
+      window.handleSignOut = function () {
+        signOut(auth).then(() => {
+          window.location.href = '/pautangina.github.io/index.html';
+        }).catch(error => {
+          console.error('Error during sign-out:', error);
+        });
+      };
+
+      onAuthStateChanged(auth, (user) => {
+        const signOutBtn = document.getElementById('sign-out-btn');
+        if (user) {
+          signOutBtn.style.display = 'block';
+          signOutBtn.onclick = handleSignOut;
+        } else {
+          signOutBtn.style.display = 'none';
+        }
+      });
+
+      fetchProductData();  // Fetch data from Google Sheets when page loads
     });
   </script>
 
