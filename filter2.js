@@ -1,4 +1,4 @@
-ocument.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     const productList = document.getElementById("product-list");
     const allProducts = Array.from(productList.getElementsByClassName("product"));
   
