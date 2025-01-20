@@ -69,12 +69,12 @@
     let cart = [];
 
     // Google Sheets API Integration
-    const SPREADSHEET_ID = 'your_spreadsheet_id';  // Replace with your actual spreadsheet ID
-    const API_KEY = 'your_api_key';  // Replace with your API key
+    const SPREADSHEET_ID = '1tUBj7jJaxtr1UnhbxusQq_ATFSPFzAV8h5rVHiqE-mo';  // Replace with your actual spreadsheet ID
+    const API_KEY = 'AIzaSyDGKkSwVkDgXgSCKEPf8ExDgeCejA6Tqu4';  // Replace with your API key
 
     // Function to fetch product data from Google Sheets
     function fetchProductData() {
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Sheet1!A2:H?key=${API_KEY}`;
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/ProductInvetory!A1:H?key=${API_KEY}`;
 
       fetch(url)
         .then(response => response.json())
