@@ -100,7 +100,6 @@
             };
 
             allProducts.push(product); // Store all products in the array
-
             // Create and display the product elements
             const productDiv = createProductElement(product);
             document.getElementById('product-list').appendChild(productDiv);
@@ -165,8 +164,16 @@
     // Function to apply filters including the search term
     function applyFilters() {
       const searchTerm = document.getElementById('search-box').value.toLowerCase();
+      const categoryFilter = document.getElementById('category-filter').value;
+      const typeFilter = document.getElementById('type-filter').value;
+
+      // Filter the products based on search term (alt), category, and type
       const filteredProducts = allProducts.filter(product => {
-        return product.alt.toLowerCase().includes(searchTerm) || product.specifications.toLowerCase().includes(searchTerm);
+        const matchesSearch = product.alt.toLowerCase().includes(searchTerm); // Search based on 'alt'
+        const matchesCategory = categoryFilter === 'all' || product.dataCategory === categoryFilter;
+        const matchesType = typeFilter === 'all' || product.dataType === typeFilter;
+
+        return matchesSearch && matchesCategory && matchesType;
       });
 
       // Clear current product list
