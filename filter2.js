@@ -10,12 +10,14 @@ document.addEventListener("DOMContentLoaded", function() {
       allProducts.forEach(product => {
         const category = product.dataset.category || "";
         const type = product.dataset.type || "";
-        const name = product.querySelector("h2").textContent.toLowerCase();
+        
+        // Search now uses the 'alt' attribute of the image for matching
+        const imageAlt = product.querySelector("img").alt.toLowerCase();
   
         // Determine if the product matches the filters
         const matchesCategory = categoryFilter === "all" || category === categoryFilter;
         const matchesType = typeFilter === "all" || type === typeFilter;
-        const matchesSearch = name.includes(searchQuery);
+        const matchesSearch = imageAlt.includes(searchQuery);  // Search based on the alt attribute
   
         // Show or hide the product based on filters
         if (matchesCategory && matchesType && matchesSearch) {
@@ -48,5 +50,4 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   
     window.applyFilters = applyFilters; // Expose function globally
-  });
-  
+});
