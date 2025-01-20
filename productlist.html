@@ -73,72 +73,95 @@
     const API_KEY = 'AIzaSyDGKkSwVkDgXgSCKEPf8ExDgeCejA6Tqu4';  // Replace with your API key
 
     // Function to fetch product data from Google Sheets
-    function fetchProductData() {
+    async function fetchProductData() {
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/ProductInventory!A:H?key=${API_KEY}`;
+      
+      try {
+        const data = await fetchWithRetry(url);
+        if (!data || !data.values) {
+          console.error('No data found');
+          return;
+        }
+        
+        const rows = data.values;
+        
+        rows.forEach((row, index) => {
+          if (index === 0) return; // Skip header row
 
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          const rows = data.values;
+          const [className, dataId, dataCategory, dataType, imgSrc, alt, price, specifications] = row;
 
-          rows.forEach((row, index) => {
-            if (index === 0) return; // Skip header row
+          const productDiv = document.createElement('div');
+          productDiv.classList.add('product');
+          productDiv.setAttribute('data-id', dataId);
+          productDiv.setAttribute('data-category', dataCategory);
+          productDiv.setAttribute('data-type', dataType);
 
-            const [className, dataId, dataCategory, dataType, imgSrc, alt, price, specifications] = row;
+          const productImg = document.createElement('img');
+          productImg.src = imgSrc;
+          productImg.alt = alt;
 
-            const productDiv = document.createElement('div');
-            productDiv.classList.add('product');
-            productDiv.setAttribute('data-id', dataId);
-            productDiv.setAttribute('data-category', dataCategory);
-            productDiv.setAttribute('data-type', dataType);
+          const productTitle = document.createElement('h2');
+          productTitle.textContent = alt;
 
-            const productImg = document.createElement('img');
-            productImg.src = imgSrc;
-            productImg.alt = alt;
+          const productPrice = document.createElement('p');
+          productPrice.textContent = `Price: Php ${price}`;
 
-            const productTitle = document.createElement('h2');
-            productTitle.textContent = alt;
+          const detailsButton = document.createElement('button');
+          detailsButton.textContent = 'Show Details';
+          detailsButton.onclick = function () {
+            toggleDetails(`details-${dataId}`, this);
+          };
 
-            const productPrice = document.createElement('p');
-            productPrice.textContent = `Price: Php ${price}`;
+          const productDetails = document.createElement('div');
+          productDetails.id = `details-${dataId}`;
+          productDetails.classList.add('product-details');
+          productDetails.style.display = 'none';
+          productDetails.innerHTML = ` 
+            <p><strong>Product:</strong> ${alt}</p>
+            <p><strong>Manufacturer:</strong> Manufacturer Name</p>
+            <p><strong>Specifications:</strong></p>
+            <ul>
+              ${specifications.split(',').map(spec => `<li>${spec.trim()}</li>`).join('')}
+            </ul>
+          `;
 
-            const detailsButton = document.createElement('button');
-            detailsButton.textContent = 'Show Details';
-            detailsButton.onclick = function () {
-              toggleDetails(`details-${dataId}`, this);
-            };
+          const addToCartButton = document.createElement('button');
+          addToCartButton.textContent = 'Add to Cart';
+          addToCartButton.onclick = function () {
+            addToCart(dataId, alt, price);
+          };
 
-            const productDetails = document.createElement('div');
-            productDetails.id = `details-${dataId}`;
-            productDetails.classList.add('product-details');
-            productDetails.style.display = 'none';
-            productDetails.innerHTML = ` 
-              <p><strong>Product:</strong> ${alt}</p>
-              <p><strong>Manufacturer:</strong> Manufacturer Name</p>
-              <p><strong>Specifications:</strong></p>
-              <ul>
-                ${specifications.split(',').map(spec => `<li>${spec.trim()}</li>`).join('')}
-              </ul>
-            `;
+          productDiv.appendChild(productImg);
+          productDiv.appendChild(productTitle);
+          productDiv.appendChild(productPrice);
+          productDiv.appendChild(detailsButton);
+          productDiv.appendChild(productDetails);
+          productDiv.appendChild(addToCartButton);
 
-            const addToCartButton = document.createElement('button');
-            addToCartButton.textContent = 'Add to Cart';
-            addToCartButton.onclick = function () {
-              addToCart(dataId, alt, price);
-            };
-
-            productDiv.appendChild(productImg);
-            productDiv.appendChild(productTitle);
-            productDiv.appendChild(productPrice);
-            productDiv.appendChild(detailsButton);
-            productDiv.appendChild(productDetails);
-            productDiv.appendChild(addToCartButton);
-
-            document.getElementById('product-list').appendChild(productDiv);
-          });
-        })
-        .catch(error => console.error('Error fetching product data:', error));
+          document.getElementById('product-list').appendChild(productDiv);
+        });
+      } catch (error) {
+        console.error('Error fetching product data:', error);
+      }
     }
+
+    // Retry mechanism for fetch requests
+    const fetchWithRetry = async (url, retries = 3, delay = 1000) => {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+          return data; // Return the data if the fetch is successful
+        } catch (error) {
+          if (i < retries - 1) {
+            console.log(`Retrying... Attempt ${i + 1}`);
+            await new Promise(resolve => setTimeout(resolve, delay * (i + 1))); // Exponential backoff
+          } else {
+            throw error;
+          }
+        }
+      }
+    };
 
     document.addEventListener("DOMContentLoaded", function () {
       // Load cart from localStorage if available
@@ -165,12 +188,16 @@
       window.toggleDetails = function (detailsId, button) {
         const detailsDiv = document.getElementById(detailsId);
 
-        if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
-          detailsDiv.style.display = 'block';
-          button.textContent = 'Hide Details'; // Change button text to 'Hide Details'
+        if (detailsDiv) {
+          if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+            detailsDiv.style.display = 'block';
+            button.textContent = 'Hide Details'; // Change button text to 'Hide Details'
+          } else {
+            detailsDiv.style.display = 'none';
+            button.textContent = 'Show Details'; // Change button text back to 'Show Details'
+          }
         } else {
-          detailsDiv.style.display = 'none';
-          button.textContent = 'Show Details'; // Change button text back to 'Show Details'
+          console.error(`Element with ID ${detailsId} not found`);
         }
       };
 
