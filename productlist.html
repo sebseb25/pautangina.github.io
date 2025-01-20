@@ -81,13 +81,14 @@
           rows.forEach((row, index) => {
             if (index === 0) return; // Skip header row
 
-            const [className, dataId, dataCategory, dataType, imgSrc, alt, price, specifications] = row;
+            const [className, dataId, dataCategory, dataType, imgSrc, alt, price, specifications, brand] = row;
 
             const productDiv = document.createElement('div');
             productDiv.classList.add('product');
             productDiv.setAttribute('data-id', dataId);
             productDiv.setAttribute('data-category', dataCategory);
             productDiv.setAttribute('data-type', dataType);
+            
 
             const productImg = document.createElement('img');
             productImg.src = imgSrc;
@@ -111,7 +112,7 @@
             productDetails.style.display = 'none';
             productDetails.innerHTML = ` 
               <p><strong>Product:</strong> ${alt}</p>
-              <p><strong>Manufacturer:</strong> Manufacturer Name</p>
+              <p><strong>Manufacturer:</strong> ${brand}</p>
               <p><strong>Specifications:</strong></p>
               <ul>
                 ${specifications.split(',').map(spec => `<li>${spec.trim()}</li>`).join('')}
