@@ -116,7 +116,7 @@
 
         // Function to calculate product loan
         function calculateProductLoan(loanAmount, loanTerm) {
-            const interestRate = 0.03; // 3% monthly interest for product loan
+            const interestRate = 0.04; // 3% monthly interest for product loan
             const totalInterest = loanAmount * interestRate * loanTerm;
             const totalRepayment = loanAmount + totalInterest;
             const semiMonthlyPayment = totalRepayment / (loanTerm * 2); // Semi-monthly repayment
