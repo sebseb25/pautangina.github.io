@@ -26,26 +26,5 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Example product metadata (update your HTML accordingly)
-  allProducts.forEach(product => {
-    // Add dataset attributes for category and type
-    if (product.dataset.id === "PHONE001" || product.dataset.id === "PHONE002") {
-      product.dataset.category = "gadget";
-      product.dataset.type = "smartphone";
-    } else if (product.dataset.id === "PHONE003") {
-      product.dataset.category = "gadget";
-      product.dataset.type = "smartphone";
-    } else if (product.dataset.id === "PHONE004") {
-      product.dataset.category = "gadget";
-      product.dataset.type = "smartphone";
-    } else if (product.dataset.id === "PHONE005") {
-      product.dataset.category = "gadget";
-      product.dataset.type = "smartphone";
-    } else if (product.dataset.id === "SMRTPHN01") {
-      product.dataset.category = "gadget";
-      product.dataset.type = "smartphone";
-    }
-  });
-
   window.applyFilters = applyFilters; // Expose function globally
 });
