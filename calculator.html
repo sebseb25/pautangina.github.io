@@ -120,7 +120,7 @@
             const annualRate = 0.6010 / 100; // 0.6010% monthly interest rate
 
         // Semi-monthly payment calculation
-            const semiMonthlyPayment = loanAmount * (annualRate / 2) / (1 - Math.pow(1 + (annualRate / 2), -2 * loanTerm)); // Semi-monthly repayment
+            const semiMonthlyPayment = loanAmount * (annualRate / 24) / (1 - Math.pow(1 + (annualRate / 24), -24 * (loanTerm / 12))); // Semi-monthly repayment 
 
         // Total repayment is the semi-monthly payment * number of payments (loanTerm in months * 2 for semi-monthly payments)
             const totalRepayment = semiMonthlyPayment * 2 * loanTerm;
