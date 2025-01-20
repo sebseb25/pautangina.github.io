@@ -5,17 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Listing</title>
   <link rel="stylesheet" href="style3.css">
-
   <style>
-    /* Ensure the rest of the layout works well */
     body {
       position: relative;
     }
   </style>
 </head>
 <body>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <img src="https://assets.softr-files.com/applications/5161fb19-ec3f-4962-b3b7-49c68eba0c5f/assets/25fa525f-cf79-4907-8efe-c0ed02c3bdde.png" alt="Logo">
   <h2>Available Products for Loan</h2>
 
@@ -24,9 +20,6 @@
     🛒 <span id="cart-count">0</span>
   </div>
 
-  <!-- Sign-Out Button -->
-  <button id="sign-out-btn" style="display:none;">Sign Out</button>
-  
   <!-- Filters and Search -->
   <div id="filter-container">
     <label for="category-filter">Filter by Category:</label>
@@ -51,151 +44,9 @@
     <label for="search-box">Search:</label>
     <input type="text" id="search-box" placeholder="Search for a product..." oninput="applyFilters()">
   </div>  
-  
 
   <!-- Product Grid -->
-  <div id="product-list">
-    <!-- Product 1 -->
-    <div class="product" data-id="PHONE001" data-category="gadget" data-type="smartphone">
-      <img src="https://i.imgur.com/N9D25OS.png" alt="iPhone14 256gb">
-      <h2>Apple iPhone 14</h2>
-      <p>Price: Php 45,490</p>
-      <button onclick="toggleDetails('details-1', this)">Show Details</button>
-      <div id="details-1" class="product-details" style="display:none;">
-        <p><strong>Product:</strong> iPhone</p>
-        <p><strong>Manufacturer:</strong> Apple</p>
-        <p><strong>Specifications:</strong></p>
-        <ul>
-          <li>Color: Starlight, Yellow, Blue</li>
-          <li>256gb</li>
-          <li>A15 chip</li>
-          <li>Shipping fee applies</li>
-        </ul>
-      </div>
-      <button onclick="addToCart('PHONE001', 'iPhone14', 45490)">Add to Cart</button>
-    </div>
-
-    <!-- Product 2 -->
-    <div class="product" data-id="PHONE002" data-category="gadget" data-type="smartphone">
-      <img src="https://i.imgur.com/BEOB8nH.png" alt="iPhone15">
-      <h2>Apple iPhone 15</h2>
-      <p>Price: Php 44,990</p>
-      <button onclick="toggleDetails('details-2', this)">Show Details</button>
-      <div id="details-2" class="product-details" style="display:none;">
-       <p><strong>Product:</strong> iPhone</p>
-        <p><strong>Manufacturer:</strong> Apple</p>
-        <p><strong>Specifications:</strong></p>
-        <ul>
-          <li>Color: Black</li>
-          <li>128gb</li>
-          <li>A15 chip</li>
-          <li>Shipping fee applies</li>
-        </ul>
-      </div>
-      <button onclick="addToCart('PHONE002', 'iPhone15', 44990)">Add to Cart</button>
-    </div>
-
-    <!-- Product 3 -->
-    <div class="product" data-id="PHONE003" data-category="gadget" data-type="smartphone">
-      <img src="https://i.imgur.com/2gCYlHi.png" alt="iPhone14 128gb">
-      <h2>Apple iPhone 14</h2>
-      <p>Price: Php 38,990</p>
-      <button onclick="toggleDetails('details-3', this)">Show Details</button>
-      <div id="details-3" class="product-details" style="display:none;">
-        <p><strong>Product:</strong> iPhone</p>
-        <p><strong>Manufacturer:</strong> Apple</p>
-        <p><strong>Specifications:</strong></p>
-        <ul>
-          <li>Color: Midnight, Blue</li>
-          <li>128gb</li>
-          <li>A15 chip</li>
-          <li>Shipping fee applies</li>
-        </ul>
-      </div>
-      <button onclick="addToCart('PHONE003', 'iPhone14128', 38990)">Add to Cart</button>
-    </div>
-    
-      <!-- Product 4 -->
-    <div class="product" data-id="PHONE004" data-category="gadget" data-type="smartphone">
-      <img src="https://i.imgur.com/q0eYRhV.png" alt="OPPO Reno11 Pro">
-      <h2>OPPO Reno11 Pro</h2>
-      <p>Price: Php 35,499</p>
-      <button onclick="toggleDetails('details-4', this)">Show Details</button>
-      <div id="details-4" class="product-details" style="display:none;">
-        <p><strong>Product:</strong> Smartphone</p>
-        <p><strong>Manufacturer:</strong> OPPO</p>
-        <p><strong>Specifications:</strong></p>
-        <ul>
-          <li>Color: Pearl White</li>
-          <li>512gb</li>
-          <li>MTK 8200</li>
-          <li>4600mAh</li>
-          <li>Shipping fee applies</li>
-        </ul>
-      </div>
-      <button onclick="addToCart('PHONE004', 'OPPO Reno11 Pro', 35499)">Add to Cart</button>
-    </div>
-
-      <!-- Product 5  -->
-    <div class="product" data-id="PHONE005" data-category="gadget" data-type="smartphone">
-      <img src="https://i.imgur.com/mtAZBJB.png" alt="iPhone12 64gb">
-      <h2>Apple iPhone 12</h2>
-      <p>Price: Php 33,590</p>
-      <button onclick="toggleDetails('details-5', this)">Show Details</button>
-      <div id="details-5" class="product-details" style="display:none;">
-        <p><strong>Product:</strong> iPhone</p>
-        <p><strong>Manufacturer:</strong> Apple</p>
-        <p><strong>Specifications:</strong></p>
-        <ul>
-          <li>Color: Blue</li>
-          <li>64gb</li>
-          <li>A14 chip</li>
-          <li>Shipping fee applies</li>
-        </ul>
-      </div>
-      <button onclick="addToCart('PHONE005', 'iPhone12 64gb', 33590)">Add to Cart</button>
-    </div>
-
-      <!-- Product 6 -->
-    <div class="product" data-id="CLEANING001" data-category="appliance" data-type="home-cleaning">
-      <img src="https://via.placeholder.com/300" alt="Samsung Galaxy S23">
-      <h2>Samsung Galaxy S23</h2>
-      <p>Price: Php 58,990</p>
-      <button onclick="toggleDetails('details-6', this)">Show Details</button>
-      <div id="details-6" class="product-details" style="display:none;">
-        <p><strong>Brand:</strong> Samsung</p>
-        <p><strong>Model:</strong> Galaxy S23</p>
-        <p><strong>Specifications:</strong></p>
-        <ul>
-          <li>Color: Phantom Black</li>
-          <li>Storage: 256GB</li>
-          <li>Battery: 3900mAh</li>
-          <li>Camera: 50MP</li>
-        </ul>
-      </div>
-      <button onclick="addToCart('SMRTPHN01', 'Samsung Galaxy S23', 58990)">Add to Cart</button>
-    </div>
-
-      <!-- Product 3 -->
-    <div class="product" data-id="SMRTPHN01">
-      <img src="https://via.placeholder.com/300" alt="Samsung Galaxy S23">
-      <h2>Samsung Galaxy S23</h2>
-      <p>Price: Php 58,990</p>
-      <button onclick="toggleDetails('details-7', this)">Show Details</button>
-      <div id="details-7" class="product-details" style="display:none;">
-        <p><strong>Brand:</strong> Samsung</p>
-        <p><strong>Model:</strong> Galaxy S23</p>
-        <p><strong>Specifications:</strong></p>
-        <ul>
-          <li>Color: Phantom Black</li>
-          <li>Storage: 256GB</li>
-          <li>Battery: 3900mAh</li>
-          <li>Camera: 50MP</li>
-        </ul>
-      </div>
-      <button onclick="addToCart('SMRTPHN01', 'Samsung Galaxy S23', 58990)">Add to Cart</button>
-    </div>
-  </div>
+  <div id="product-list"></div>
 
   <!-- Firebase and Scripts -->
   <script type="module">
@@ -217,13 +68,85 @@
 
     let cart = [];
 
-    document.addEventListener("DOMContentLoaded", function() {
+    // Google Sheets API Integration
+    const SPREADSHEET_ID = 'your_spreadsheet_id';  // Replace with your actual spreadsheet ID
+    const API_KEY = 'your_api_key';  // Replace with your API key
+
+    // Function to fetch product data from Google Sheets
+    function fetchProductData() {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Sheet1!A2:H?key=${API_KEY}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const rows = data.values;
+
+          rows.forEach((row, index) => {
+            if (index === 0) return; // Skip header row
+
+            const [className, dataId, dataCategory, dataType, imgSrc, alt, price, specifications] = row;
+
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+            productDiv.setAttribute('data-id', dataId);
+            productDiv.setAttribute('data-category', dataCategory);
+            productDiv.setAttribute('data-type', dataType);
+
+            const productImg = document.createElement('img');
+            productImg.src = imgSrc;
+            productImg.alt = alt;
+
+            const productTitle = document.createElement('h2');
+            productTitle.textContent = alt;
+
+            const productPrice = document.createElement('p');
+            productPrice.textContent = `Price: Php ${price}`;
+
+            const detailsButton = document.createElement('button');
+            detailsButton.textContent = 'Show Details';
+            detailsButton.onclick = function () {
+              toggleDetails(`details-${dataId}`, this);
+            };
+
+            const productDetails = document.createElement('div');
+            productDetails.id = `details-${dataId}`;
+            productDetails.classList.add('product-details');
+            productDetails.style.display = 'none';
+            productDetails.innerHTML = ` 
+              <p><strong>Product:</strong> ${alt}</p>
+              <p><strong>Manufacturer:</strong> Manufacturer Name</p>
+              <p><strong>Specifications:</strong></p>
+              <ul>
+                ${specifications.split(',').map(spec => `<li>${spec.trim()}</li>`).join('')}
+              </ul>
+            `;
+
+            const addToCartButton = document.createElement('button');
+            addToCartButton.textContent = 'Add to Cart';
+            addToCartButton.onclick = function () {
+              addToCart(dataId, alt, price);
+            };
+
+            productDiv.appendChild(productImg);
+            productDiv.appendChild(productTitle);
+            productDiv.appendChild(productPrice);
+            productDiv.appendChild(detailsButton);
+            productDiv.appendChild(productDetails);
+            productDiv.appendChild(addToCartButton);
+
+            document.getElementById('product-list').appendChild(productDiv);
+          });
+        })
+        .catch(error => console.error('Error fetching product data:', error));
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
       // Load cart from localStorage if available
       const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
       cart = savedCart;
       updateCartDisplay();
 
-      window.addToCart = function(productId, productName, productPrice) {
+      window.addToCart = function (productId, productName, productPrice) {
         const product = { productId, productName, productPrice };
         cart.push(product);
         updateCartDisplay();
@@ -234,12 +157,12 @@
         cartCount.textContent = cart.length;
       }
 
-      document.getElementById('cart').addEventListener('click', function() {
+      document.getElementById('cart').addEventListener('click', function () {
         localStorage.setItem("cart", JSON.stringify(cart));
         window.location.href = "cart.html";
       });
 
-      window.toggleDetails = function(detailsId, button) {
+      window.toggleDetails = function (detailsId, button) {
         const detailsDiv = document.getElementById(detailsId);
 
         if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
@@ -251,7 +174,7 @@
         }
       };
 
-      window.handleSignOut = function() {
+      window.handleSignOut = function () {
         signOut(auth).then(() => {
           window.location.href = '/pautangina.github.io/index.html';
         }).catch(error => {
@@ -266,12 +189,14 @@
           signOutBtn.onclick = handleSignOut;
         } else {
           signOutBtn.style.display = 'none';
-         }
+        }
       });
+
+      fetchProductData();  // Fetch data from Google Sheets when page loads
     });
   </script>
 
   <!-- Link to filter.js -->
-  <script src="filter.js"></script>
+  <script src="filter2.js"></script>
 </body>
 </html>
