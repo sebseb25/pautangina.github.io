@@ -1,1 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart</title>
+  <link rel="stylesheet" href="style3.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
 
+    h1 {
+      text-align: center;
+      padding: 20px;
+      background-color: #00001C;
+      color: white;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    #cart-items {
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #f1f1f1;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-item p {
+      margin: 5px 0;
+    }
+
+    .cart-item button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .cart-item button:hover {
+      background-color: #c0392b;
+    }
+
+    .total-price {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #5cb85c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #1a2536;
+    }
+
+    #back-to-products {
+      background-color: #5cb85c;
+      margin-top: 10px;
+    }
+
+    #back-to-products:hover {
+      background-color: #7f8c8d;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 1.5em;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Your Cart</h1>
+
+    <!-- Cart Items will be dynamically populated here -->
+    <div id="cart-items"></div>
+
+    <p id="total-price" class="total-price">Total: Php 0</p>
+
+    <!-- Loan Term Selection -->
+    <label for="loan-term">Select Loan Term:</label>
+    <select id="loan-term">
+      <option value="1">1 Month</option>
+      <option value="2">2 Months</option>
+      <option value="3">3 Months</option>
+      <option value="4">4 Months</option>
+      <option value="5">5 Months</option>
+      <option value="6">6 Months</option>
+    </select>
+
+    <!-- New Fields for Checkout -->
+    <label for="full-name">Full Name:</label>
+    <input type="text" id="full-name" placeholder="Enter your full name">
+
+    <label for="email">Email Address:</label>
+    <input type="text" id="email" placeholder="Enter your email address">
+
+    <label for="address">Address:</label>
+    <input type="text" id="address" placeholder="Enter your address">
+
+    <label for="phone">Phone Number:</label>
+    <input type="text" id="phone" placeholder="Enter your phone number">
+
+    <label for="department">Department:</label>
+    <select id="department">
+      <option value="Financials">Financials</option>
+      <option value="Blooms">Blooms</option>
+      <option value="QID">QID</option>
+      <option value="HR">HR</option>
+      <option value="Admin">Admin</option>
+    </select>
+
+    <label for="team">Team:</label>
+    <input type="text" id="team" placeholder="Enter your team name">
+
+    <button onclick="submitOrder()">Submit</button>
+
+    <!-- Button to go back to productloan.html -->
+    <button id="back-to-products">Back to Products</button>
+  </div>
+
+  <!-- Firebase Modules as ES Modules -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6WHRzPz5kpF39K0U-RwB6Q-8DySMJ0uM",
+      authDomain: "pautangina-6f0ab.firebaseapp.com",
+      projectId: "pautangina-6f0ab",
+      storageBucket: "pautangina-6f0ab.firebasestorage.app",
+      messagingSenderId: "981514614207",
+      appId: "1:981514614207:web:ad7f106d68991920ff5d0a",
+      measurementId: "G-99917HK00J"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let totalPrice = 0;
+
+    // Display cart items and calculate total price
+    const cartItemsContainer = document.getElementById("cart-items");
+    const totalPriceElement = document.getElementById("total-price");
+
+    function renderCart() {
+      cartItemsContainer.innerHTML = "";
+      totalPrice = 0;
+
+      cart.forEach((item, index) => {
+        const itemElement = document.createElement("div");
+        itemElement.className = "cart-item";
+        itemElement.innerHTML = `
+          <p><strong>${item.productName}</strong></p>
+          <p>Price: Php ${item.productPrice}</p>
+          <button onclick="removeFromCart(${index})">Remove</button>
+        `;
+        cartItemsContainer.appendChild(itemElement);
+        totalPrice += item.productPrice;
+      });
+
+      totalPriceElement.textContent = `Total: Php ${totalPrice}`;
+    }
+
+    // Remove item from cart
+    window.removeFromCart = function(index) {
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    };
+
+    // Submit order
+    window.submitOrder = function() {
+      const loanTerm = document.getElementById("loan-term").value;
+      const fullName = document.getElementById("full-name").value;
+      const email = document.getElementById("email").value;
+      const address = document.getElementById("address").value;
+      const phone = document.getElementById("phone").value;
+      const department = document.getElementById("department").value;
+      const team = document.getElementById("team").value;
+
+      const order = {
+        userId: auth.currentUser.uid,
+        cart: cart,
+        totalPrice: totalPrice,
+        loanTerm: loanTerm,
+        fullName: fullName,
+        email: email,
+        address: address,
+        phone: phone,
+        department: department,
+        team: team,
+        timestamp: serverTimestamp(),
+      };
+
+      addDoc(collection(db, "orders"), order)
+        .then(() => {
+          alert("Order submitted successfully");
+          localStorage.removeItem("cart");  // Clear cart only after submitting
+          cart = [];
+          renderCart();
+          window.location.href = "productloan.html";  // Redirect back to the product page
+        })
+        .catch(error => {
+          console.error("Error submitting order:", error);
+        });
+    };
+
+    // Back to Products button (without clearing cart)
+    document.getElementById("back-to-products").addEventListener("click", () => {
+      window.location.href = "productlist.html";  // Navigate without clearing the cart
+    });
+
+    // Initial render
+    renderCart();
+  </script>
+
+</body>
+</html>
