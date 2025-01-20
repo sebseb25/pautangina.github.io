@@ -7,12 +7,18 @@ document.addEventListener("DOMContentLoaded", function() {
       const typeFilter = document.getElementById("type-filter").value;
       const searchQuery = document.getElementById("search-box").value.toLowerCase();
   
+      console.log("Applying filters...");
+      console.log("Search Query: ", searchQuery);
+  
       allProducts.forEach(product => {
         const category = product.dataset.category || "";
         const type = product.dataset.type || "";
         
-        // Search now uses the 'alt' attribute of the image for matching
-        const imageAlt = product.querySelector("img").alt.toLowerCase();
+        // Get the alt attribute for search
+        const productImage = product.querySelector("img");
+        const imageAlt = productImage ? productImage.alt.toLowerCase() : "";
+
+        console.log("Product Alt: ", imageAlt); // Debugging to check alt value
   
         // Determine if the product matches the filters
         const matchesCategory = categoryFilter === "all" || category === categoryFilter;
