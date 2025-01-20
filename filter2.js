@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
       allProducts.forEach(product => {
         const category = product.dataset.category || "";
         const type = product.dataset.type || "";
-        const name = product.querySelector("h2").textContent.toLowerCase(); // Now using h2 text (alt) for search
+        const name = product.querySelector("h2").textContent.toLowerCase(); // Search based on h2 content (alt)
 
         // Determine if the product matches the filters
         const matchesCategory = categoryFilter === "all" || category === categoryFilter;
