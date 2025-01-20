@@ -31,7 +31,7 @@ h2 {
 /* Product Grid */
 #product-list {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Always use 3 columns */
+    grid-template-columns: repeat(4, 1fr); /* Always use 3 columns */
     gap: 20px;
     padding: 20px;
     padding-bottom: 80px;
