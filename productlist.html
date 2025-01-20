@@ -133,6 +133,9 @@
 
             document.getElementById('product-list').appendChild(productDiv);
           });
+
+          // Apply filters once products are loaded
+          applyFilters();
         })
         .catch(error => console.error('Error fetching product data:', error));
     }
