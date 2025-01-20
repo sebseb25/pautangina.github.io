@@ -7,7 +7,13 @@
   <link rel="stylesheet" href="style3.css">
 </head>
 <body>
+  <img src="https://assets.softr-files.com/applications/5161fb19-ec3f-4962-b3b7-49c68eba0c5f/assets/25fa525f-cf79-4907-8efe-c0ed02c3bdde.png" alt="Logo">
   <h2>Available Products for Loan</h2>
+
+  <!-- Cart Icon -->
+  <div id="cart">
+    🛒 <span id="cart-count">0</span>
+  </div>
 
   <!-- Filters and Search -->
   <div id="filter-container">
@@ -37,22 +43,157 @@
   <!-- Product Grid -->
   <div id="product-list">
     <!-- Example Product: dynamically added by JavaScript -->
-    <div class="product" data-id="PHONE001" data-category="gadget" data-type="smartphone">
-      <img src="phone.jpg" alt="Smartphone Model X">
-      <h2>Smartphone Model X</h2>
-      <p>Price: Php 15,000</p>
-      <button>Add to Cart</button>
-    </div>
-    <div class="product" data-id="PHONE002" data-category="gadget" data-type="smartphone">
-      <img src="phone2.jpg" alt="Smartphone Model Y">
-      <h2>Smartphone Model Y</h2>
-      <p>Price: Php 18,000</p>
-      <button>Add to Cart</button>
-    </div>
-    <!-- More product items here -->
   </div>
 
-  <!-- Scripts -->
+  <!-- Firebase and Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD6WHRzPz5kpF39K0U-RwB6Q-8DySMJ0uM",
+      authDomain: "pautangina-6f0ab.firebaseapp.com",
+      projectId: "pautangina-6f0ab",
+      storageBucket: "pautangina-6f0ab.firebasestorage.app",
+      messagingSenderId: "981514614207",
+      appId: "1:981514614207:web:ad7f106d68991920ff5d0a",
+      measurementId: "G-99917HK00J"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let cart = [];
+
+    // Google Sheets API Integration
+    const SPREADSHEET_ID = '1tUBj7jJaxtr1UnhbxusQq_ATFSPFzAV8h5rVHiqE-mo';  // Replace with your actual spreadsheet ID
+    const API_KEY = 'AIzaSyDGKkSwVkDgXgSCKEPf8ExDgeCejA6Tqu4';  // Replace with your API key
+
+    // Function to fetch product data from Google Sheets
+    function fetchProductData() {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/ProductInventory!A:H?key=${API_KEY}`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const rows = data.values;
+
+          rows.forEach((row, index) => {
+            if (index === 0) return; // Skip header row
+
+            const [className, dataId, dataCategory, dataType, imgSrc, alt, price, specifications] = row;
+
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('product');
+            productDiv.setAttribute('data-id', dataId);
+            productDiv.setAttribute('data-category', dataCategory);
+            productDiv.setAttribute('data-type', dataType);
+
+            const productImg = document.createElement('img');
+            productImg.src = imgSrc;
+            productImg.alt = alt;
+
+            const productTitle = document.createElement('h2');
+            productTitle.textContent = alt;
+
+            const productPrice = document.createElement('p');
+            productPrice.textContent = `Price: Php ${price}`;
+
+            const detailsButton = document.createElement('button');
+            detailsButton.textContent = 'Show Details';
+            detailsButton.onclick = function () {
+              toggleDetails(`details-${dataId}`, this);
+            };
+
+            const productDetails = document.createElement('div');
+            productDetails.id = `details-${dataId}`;
+            productDetails.classList.add('product-details');
+            productDetails.style.display = 'none';
+            productDetails.innerHTML = ` 
+              <p><strong>Product:</strong> ${alt}</p>
+              <p><strong>Manufacturer:</strong> Manufacturer Name</p>
+              <p><strong>Specifications:</strong></p>
+              <ul>
+                ${specifications.split(',').map(spec => `<li>${spec.trim()}</li>`).join('')}
+              </ul>
+            `;
+
+            const addToCartButton = document.createElement('button');
+            addToCartButton.textContent = 'Add to Cart';
+            addToCartButton.onclick = function () {
+              addToCart(dataId, alt, price);
+            };
+
+            productDiv.appendChild(productImg);
+            productDiv.appendChild(productTitle);
+            productDiv.appendChild(productPrice);
+            productDiv.appendChild(detailsButton);
+            productDiv.appendChild(productDetails);
+            productDiv.appendChild(addToCartButton);
+
+            document.getElementById('product-list').appendChild(productDiv);
+          });
+        })
+        .catch(error => console.error('Error fetching product data:', error));
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // Load cart from localStorage if available
+      const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart = savedCart;
+      updateCartDisplay();
+
+      window.addToCart = function (productId, productName, productPrice) {
+        const product = { productId, productName, productPrice };
+        cart.push(product);
+        updateCartDisplay();
+      };
+
+      function updateCartDisplay() {
+        const cartCount = document.getElementById('cart-count');
+        cartCount.textContent = cart.length;
+      }
+
+      document.getElementById('cart').addEventListener('click', function () {
+        localStorage.setItem("cart", JSON.stringify(cart));
+        window.location.href = "cart.html";
+      });
+
+      window.toggleDetails = function (detailsId, button) {
+        const detailsDiv = document.getElementById(detailsId);
+
+        if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
+          detailsDiv.style.display = 'block';
+          button.textContent = 'Hide Details'; // Change button text to 'Hide Details'
+        } else {
+          detailsDiv.style.display = 'none';
+          button.textContent = 'Show Details'; // Change button text back to 'Show Details'
+        }
+      };
+
+      window.handleSignOut = function () {
+        signOut(auth).then(() => {
+          window.location.href = '/pautangina.github.io/index.html';
+        }).catch(error => {
+          console.error('Error during sign-out:', error);
+        });
+      };
+
+      onAuthStateChanged(auth, (user) => {
+        const signOutBtn = document.getElementById('sign-out-btn');
+        if (user) {
+          signOutBtn.style.display = 'block';
+          signOutBtn.onclick = handleSignOut;
+        } else {
+          signOutBtn.style.display = 'none';
+        }
+      });
+
+      fetchProductData();  // Fetch data from Google Sheets when page loads
+    });
+  </script>
+
+  <!-- Link to filter.js -->
   <script src="filter2.js"></script>
 </body>
 </html>
