@@ -67,104 +67,123 @@
     const auth = getAuth(app);
 
     let cart = [];
+    let allProducts = [];  // Global variable to store all products
 
     // Google Sheets API Integration
     const SPREADSHEET_ID = '1tUBj7jJaxtr1UnhbxusQq_ATFSPFzAV8h5rVHiqE-mo';  // Replace with your actual spreadsheet ID
     const API_KEY = 'AIzaSyDGKkSwVkDgXgSCKEPf8ExDgeCejA6Tqu4';  // Replace with your API key
 
     // Function to fetch product data from Google Sheets
-    async function fetchProductData() {
+    function fetchProductData() {
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/ProductInventory!A:H?key=${API_KEY}`;
-      
-      try {
-        const data = await fetchWithRetry(url);
-        if (!data || !data.values) {
-          console.error('No data found');
-          return;
-        }
-        
-        const rows = data.values;
-        
-        rows.forEach((row, index) => {
-          if (index === 0) return; // Skip header row
 
-          const [className, dataId, dataCategory, dataType, imgSrc, alt, price, specifications] = row;
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const rows = data.values;
+          allProducts = [];  // Reset the allProducts array
 
-          const productDiv = document.createElement('div');
-          productDiv.classList.add('product');
-          productDiv.setAttribute('data-id', dataId);
-          productDiv.setAttribute('data-category', dataCategory);
-          productDiv.setAttribute('data-type', dataType);
+          rows.forEach((row, index) => {
+            if (index === 0) return; // Skip header row
 
-          const productImg = document.createElement('img');
-          productImg.src = imgSrc;
-          productImg.alt = alt;
+            const [className, dataId, dataCategory, dataType, imgSrc, alt, price, specifications] = row;
 
-          const productTitle = document.createElement('h2');
-          productTitle.textContent = alt;
+            const product = {
+              className,
+              dataId,
+              dataCategory,
+              dataType,
+              imgSrc,
+              alt,
+              price,
+              specifications
+            };
 
-          const productPrice = document.createElement('p');
-          productPrice.textContent = `Price: Php ${price}`;
+            allProducts.push(product); // Store all products in the array
 
-          const detailsButton = document.createElement('button');
-          detailsButton.textContent = 'Show Details';
-          detailsButton.onclick = function () {
-            toggleDetails(`details-${dataId}`, this);
-          };
-
-          const productDetails = document.createElement('div');
-          productDetails.id = `details-${dataId}`;
-          productDetails.classList.add('product-details');
-          productDetails.style.display = 'none';
-          productDetails.innerHTML = ` 
-            <p><strong>Product:</strong> ${alt}</p>
-            <p><strong>Manufacturer:</strong> Manufacturer Name</p>
-            <p><strong>Specifications:</strong></p>
-            <ul>
-              ${specifications.split(',').map(spec => `<li>${spec.trim()}</li>`).join('')}
-            </ul>
-          `;
-
-          const addToCartButton = document.createElement('button');
-          addToCartButton.textContent = 'Add to Cart';
-          addToCartButton.onclick = function () {
-            addToCart(dataId, alt, price);
-          };
-
-          productDiv.appendChild(productImg);
-          productDiv.appendChild(productTitle);
-          productDiv.appendChild(productPrice);
-          productDiv.appendChild(detailsButton);
-          productDiv.appendChild(productDetails);
-          productDiv.appendChild(addToCartButton);
-
-          document.getElementById('product-list').appendChild(productDiv);
-        });
-      } catch (error) {
-        console.error('Error fetching product data:', error);
-      }
+            // Create and display the product elements
+            const productDiv = createProductElement(product);
+            document.getElementById('product-list').appendChild(productDiv);
+          });
+        })
+        .catch(error => console.error('Error fetching product data:', error));
     }
 
-    // Retry mechanism for fetch requests
-    const fetchWithRetry = async (url, retries = 3, delay = 1000) => {
-      for (let i = 0; i < retries; i++) {
-        try {
-          const response = await fetch(url);
-          const data = await response.json();
-          return data; // Return the data if the fetch is successful
-        } catch (error) {
-          if (i < retries - 1) {
-            console.log(`Retrying... Attempt ${i + 1}`);
-            await new Promise(resolve => setTimeout(resolve, delay * (i + 1))); // Exponential backoff
-          } else {
-            throw error;
-          }
-        }
-      }
-    };
+    // Helper function to create a product element
+    function createProductElement(product) {
+      const productDiv = document.createElement('div');
+      productDiv.classList.add('product');
+      productDiv.setAttribute('data-id', product.dataId);
+      productDiv.setAttribute('data-category', product.dataCategory);
+      productDiv.setAttribute('data-type', product.dataType);
+
+      const productImg = document.createElement('img');
+      productImg.src = product.imgSrc;
+      productImg.alt = product.alt;
+
+      const productTitle = document.createElement('h2');
+      productTitle.textContent = product.alt;
+
+      const productPrice = document.createElement('p');
+      productPrice.textContent = `Price: Php ${product.price}`;
+
+      const detailsButton = document.createElement('button');
+      detailsButton.textContent = 'Show Details';
+      detailsButton.onclick = function () {
+        toggleDetails(`details-${product.dataId}`, this);
+      };
+
+      const productDetails = document.createElement('div');
+      productDetails.id = `details-${product.dataId}`;
+      productDetails.classList.add('product-details');
+      productDetails.style.display = 'none';
+      productDetails.innerHTML = `
+        <p><strong>Product:</strong> ${product.alt}</p>
+        <p><strong>Manufacturer:</strong> Manufacturer Name</p>
+        <p><strong>Specifications:</strong></p>
+        <ul>
+          ${product.specifications.split(',').map(spec => `<li>${spec.trim()}</li>`).join('')}
+        </ul>
+      `;
+
+      const addToCartButton = document.createElement('button');
+      addToCartButton.textContent = 'Add to Cart';
+      addToCartButton.onclick = function () {
+        addToCart(product.dataId, product.alt, product.price);
+      };
+
+      productDiv.appendChild(productImg);
+      productDiv.appendChild(productTitle);
+      productDiv.appendChild(productPrice);
+      productDiv.appendChild(detailsButton);
+      productDiv.appendChild(productDetails);
+      productDiv.appendChild(addToCartButton);
+
+      return productDiv;
+    }
+
+    // Function to apply filters including the search term
+    function applyFilters() {
+      const searchTerm = document.getElementById('search-box').value.toLowerCase();
+      const filteredProducts = allProducts.filter(product => {
+        return product.alt.toLowerCase().includes(searchTerm) || product.specifications.toLowerCase().includes(searchTerm);
+      });
+
+      // Clear current product list
+      const productListDiv = document.getElementById('product-list');
+      productListDiv.innerHTML = '';
+
+      // Append filtered products
+      filteredProducts.forEach(product => {
+        const productDiv = createProductElement(product);
+        productListDiv.appendChild(productDiv);
+      });
+    }
 
     document.addEventListener("DOMContentLoaded", function () {
-      // Load cart from localStorage if available
+      fetchProductData();  // Fetch product data from Google Sheets
+
+      // Cart functionality
       const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
       cart = savedCart;
       updateCartDisplay();
@@ -184,42 +203,6 @@
         localStorage.setItem("cart", JSON.stringify(cart));
         window.location.href = "cart.html";
       });
-
-      window.toggleDetails = function (detailsId, button) {
-        const detailsDiv = document.getElementById(detailsId);
-
-        if (detailsDiv) {
-          if (detailsDiv.style.display === 'none' || detailsDiv.style.display === '') {
-            detailsDiv.style.display = 'block';
-            button.textContent = 'Hide Details'; // Change button text to 'Hide Details'
-          } else {
-            detailsDiv.style.display = 'none';
-            button.textContent = 'Show Details'; // Change button text back to 'Show Details'
-          }
-        } else {
-          console.error(`Element with ID ${detailsId} not found`);
-        }
-      };
-
-      window.handleSignOut = function () {
-        signOut(auth).then(() => {
-          window.location.href = '/pautangina.github.io/index.html';
-        }).catch(error => {
-          console.error('Error during sign-out:', error);
-        });
-      };
-
-      onAuthStateChanged(auth, (user) => {
-        const signOutBtn = document.getElementById('sign-out-btn');
-        if (user) {
-          signOutBtn.style.display = 'block';
-          signOutBtn.onclick = handleSignOut;
-        } else {
-          signOutBtn.style.display = 'none';
-        }
-      });
-
-      fetchProductData();  // Fetch data from Google Sheets when page loads
     });
   </script>
 
