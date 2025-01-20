@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cart</title>
+  <title>Pautangina | Cart</title>
   <link rel="stylesheet" href="style3.css">
   <style>
+    /* Your existing styles */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -13,7 +14,6 @@
       background-color: #f9f9f9;
       color: #333;
     }
-
     h1 {
       text-align: center;
       padding: 20px;
@@ -21,7 +21,6 @@
       color: white;
       margin: 0;
     }
-
     .container {
       max-width: 800px;
       margin: 20px auto;
@@ -30,11 +29,9 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
     }
-
     #cart-items {
       margin-bottom: 20px;
     }
-
     .cart-item {
       padding: 10px;
       margin-bottom: 10px;
@@ -42,11 +39,9 @@
       border-radius: 4px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-
     .cart-item p {
       margin: 5px 0;
     }
-
     .cart-item button {
       background-color: #e74c3c;
       color: white;
@@ -55,63 +50,36 @@
       border-radius: 4px;
       cursor: pointer;
     }
-
     .cart-item button:hover {
       background-color: #c0392b;
     }
-
     .total-price {
       font-size: 1.2em;
       font-weight: bold;
       margin-bottom: 20px;
     }
-
-    label {
+    label, input, select, button {
       display: block;
-      margin: 10px 0 5px;
-      font-weight: bold;
-    }
-
-    input, select {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
+      margin-bottom: 10px;
     }
-
     button {
       background-color: #5cb85c;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 10px;
       border-radius: 4px;
       cursor: pointer;
-      width: 100%;
     }
-
     button:hover {
       background-color: #1a2536;
     }
-
     #back-to-products {
       background-color: #5cb85c;
       margin-top: 10px;
     }
-
     #back-to-products:hover {
       background-color: #7f8c8d;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 15px;
-      }
-
-      h1 {
-        font-size: 1.5em;
-        padding: 10px;
-      }
     }
   </style>
 </head>
@@ -136,7 +104,6 @@
       <option value="6">6 Months</option>
     </select>
 
-    <!-- New Fields for Checkout -->
     <label for="full-name">Full Name:</label>
     <input type="text" id="full-name" placeholder="Enter your full name">
 
@@ -167,17 +134,16 @@
     <button id="back-to-products">Back to Products</button>
   </div>
 
-  <!-- Firebase Modules as ES Modules -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD6WHRzPz5kpF39K0U-RwB6Q-8DySMJ0uM",
       authDomain: "pautangina-6f0ab.firebaseapp.com",
       projectId: "pautangina-6f0ab",
-      storageBucket: "pautangina-6f0ab.firebasestorage.app",
+      storageBucket: "pautangina-6f0ab.appspot.com",
       messagingSenderId: "981514614207",
       appId: "1:981514614207:web:ad7f106d68991920ff5d0a",
       measurementId: "G-99917HK00J"
@@ -190,7 +156,6 @@
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     let totalPrice = 0;
 
-    // Display cart items and calculate total price
     const cartItemsContainer = document.getElementById("cart-items");
     const totalPriceElement = document.getElementById("total-price");
 
@@ -203,24 +168,22 @@
         itemElement.className = "cart-item";
         itemElement.innerHTML = `
           <p><strong>${item.productName}</strong></p>
-          <p>Price: Php ${item.productPrice}</p>
+          <p>Price: Php ${parseFloat(item.productPrice).toFixed(2)}</p>
           <button onclick="removeFromCart(${index})">Remove</button>
         `;
         cartItemsContainer.appendChild(itemElement);
-        totalPrice += item.productPrice;
+        totalPrice += parseFloat(item.productPrice); // Ensure price is added as a number
       });
 
-      totalPriceElement.textContent = `Total: Php ${totalPrice}`;
+      totalPriceElement.textContent = `Total: Php ${totalPrice.toFixed(2)}`; // Format total
     }
 
-    // Remove item from cart
     window.removeFromCart = function(index) {
       cart.splice(index, 1);
       localStorage.setItem("cart", JSON.stringify(cart));
       renderCart();
     };
 
-    // Submit order
     window.submitOrder = function() {
       const loanTerm = document.getElementById("loan-term").value;
       const fullName = document.getElementById("full-name").value;
@@ -246,25 +209,22 @@
 
       addDoc(collection(db, "orders"), order)
         .then(() => {
-          alert("Order submitted successfully");
-          localStorage.removeItem("cart");  // Clear cart only after submitting
+          alert("Order submitted successfully!");
+          localStorage.removeItem("cart");
           cart = [];
           renderCart();
-          window.location.href = "productloan.html";  // Redirect back to the product page
+          window.location.href = "productloan.html";
         })
         .catch(error => {
           console.error("Error submitting order:", error);
         });
     };
 
-    // Back to Products button (without clearing cart)
     document.getElementById("back-to-products").addEventListener("click", () => {
-      window.location.href = "productlist.html";  // Navigate without clearing the cart
+      window.location.href = "productloan.html";
     });
 
-    // Initial render
     renderCart();
   </script>
-
 </body>
 </html>
