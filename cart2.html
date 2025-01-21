@@ -198,6 +198,12 @@
         alert("Error: The total price exceeds the maximum limit of Php 50,000. Please remove some items or adjust your order.");
         return; // Prevent order submission
       }
+
+        // Check if the total price is less than 10,000
+      if (totalPrice < 10000) {
+        alert("Error: The total price is below the minimum loan amount of Php 10,000. Please add more items to your cart.");
+        return; // Prevent order submission
+      }
       
       const order = {
         userId: auth.currentUser.uid,
