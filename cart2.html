@@ -166,7 +166,7 @@
       cart.forEach((item, index) => {
         const itemElement = document.createElement("div");
         itemElement.className = "cart-item";
-        itemElement.innerHTML = `
+        itemElement.innerHTML = `        
           <p><strong>${item.productName}</strong></p>
           <p>Price: Php ${parseFloat(item.productPrice).toFixed(2)}</p>
           <button onclick="removeFromCart(${index})">Remove</button>
@@ -192,19 +192,25 @@
       const phone = document.getElementById("phone").value;
       const department = document.getElementById("department").value;
       const team = document.getElementById("team").value;
-      
+
+      // Validation for empty fields
+      if (!fullName || !email || !address || !phone || !team) {
+        alert("Please fill out all the required fields.");
+        return; // Prevent order submission
+      }
+
       // Check if the total price exceeds 50,000
       if (totalPrice > 50000) {
         alert("Error: The total price exceeds the maximum limit of Php 50,000. Please remove some items or adjust your order.");
         return; // Prevent order submission
       }
 
-        // Check if the total price is less than 10,000
+      // Check if the total price is less than 10,000
       if (totalPrice < 10000) {
         alert("Error: The total price is below the minimum loan amount of Php 10,000. Please add more items to your cart.");
         return; // Prevent order submission
       }
-      
+
       const order = {
         userId: auth.currentUser.uid,
         cart: cart,
