@@ -227,7 +227,7 @@
 
       addDoc(collection(db, "orders"), order)
         .then(() => {
-          alert("Order submitted successfully!");
+          alert("Your order has been successfully submitted! One of our team members will review your application, and you will receive an email once your loan is approved.");
           localStorage.removeItem("cart");
           cart = [];
           renderCart();
