@@ -192,7 +192,13 @@
       const phone = document.getElementById("phone").value;
       const department = document.getElementById("department").value;
       const team = document.getElementById("team").value;
-
+      
+      // Check if the total price exceeds 50,000
+      if (totalPrice > 50000) {
+        alert("Error: The total price exceeds the maximum limit of Php 50,000. Please remove some items or adjust your order.");
+        return; // Prevent order submission
+      }
+      
       const order = {
         userId: auth.currentUser.uid,
         cart: cart,
