@@ -55,14 +55,15 @@
             width: 100%;
             max-width: 300px;
         }
-        select, input, button {
+        sselect, input, button {
             font-size: 1em;
             padding: 10px;
             width: 100%;
-            max-width: 300px;
+             max-width: 300px;
             border: none;
             border-radius: 5px;
-            height: 40px; /* Ensure consistent height for input and select boxes */
+            height: 40px; /* Ensures consistent height for input and select boxes */
+            box-sizing: border-box; /* Ensure padding does not affect width */
         }
         input, select {
             background-color: #2C2C5A;
