@@ -46,7 +46,7 @@ h2 {
 
 @media (max-width: 768px) {
     #product-list {
-        grid-template-columns: repeat (2, 1fr); /* Switch to 1 column on small screens */
+        grid-template-columns: 1fr; /* Switch to 1 column on small screens */
     }
 }
 
