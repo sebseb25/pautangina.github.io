@@ -40,7 +40,7 @@ h2 {
 /* Responsive Grid for Smaller Screens */
 @media (max-width: 1024px) {
     #product-list {
-        grid-template-columns: repeat(3, 1fr); /* Switch to 2 columns on medium screens */
+        grid-template-columns: repeat(2, 1fr); /* Switch to 2 columns on medium screens */
     }
 }
 
