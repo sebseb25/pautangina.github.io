@@ -22,7 +22,7 @@
             font-weight: bold;
         }
         h2 {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: normal;
         }
         .calculator-container {
@@ -199,7 +199,7 @@
                 }
                 result = calculateProductLoan(loanAmount, loanTerm);
             }
-            resultDiv.textContent = `Total Repayment: PHP ${result.totalRepayment.toFixed(2)} | ` +
+            resultDiv.textContent = `Total Repayment: PHP ${result.totalRepayment.toFixed(2)}   |   ` +
                 `Semi-Monthly Payment: PHP ${(result.semiMonthlyPayment || result.monthlyPayment).toFixed(2)}`;
         });
     </script>
