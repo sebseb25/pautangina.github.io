@@ -123,7 +123,65 @@
     </div>
 
     <script>
-        // JavaScript code remains unchanged
+        // Function to calculate salary loan
+        function calculateSalaryLoan(loanAmount, loanTerm) {
+            const interestRate = 0.04; // 4% monthly interest for salary loan
+            const totalInterest = loanAmount * interestRate * loanTerm;
+            const totalRepayment = loanAmount + totalInterest;
+            const monthlyPayment = totalRepayment / (loanTerm * 2); // Semi-monthly repayment
+
+            return {
+                totalRepayment,
+                monthlyPayment
+            };
+        }
+
+        // Function to calculate product loan
+        function calculateProductLoan(loanAmount, loanTerm) {
+            const annualRate = 0.640; // 64% annual interest rate
+            const monthlyRate = annualRate / 12;
+            const semiMonthlyRate = monthlyRate / 2;
+
+            const semiMonthlyPayment = loanAmount * semiMonthlyRate / (1 - Math.pow(1 + semiMonthlyRate, -2 * loanTerm));
+            const totalRepayment = semiMonthlyPayment * loanTerm * 2;
+
+            return {
+                totalRepayment,
+                semiMonthlyPayment
+            };
+        }
+
+        // Event listener for calculating loan repayment
+        document.getElementById('calculateButton').addEventListener('click', function () {
+            const loanType = document.getElementById('loanType').value;
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const loanTerm = parseInt(document.getElementById('loanTerm').value);
+            const resultDiv = document.getElementById('result');
+
+            if (isNaN(loanAmount) || isNaN(loanTerm)) {
+                resultDiv.textContent = "Please enter valid loan amount and term.";
+                return;
+            }
+
+            let result;
+
+            if (loanType === 'salary') {
+                if (loanTerm < 1 || loanTerm > 3) {
+                    resultDiv.textContent = "For Salary Loan, the term must be between 1 and 3 months.";
+                    return;
+                }
+                result = calculateSalaryLoan(loanAmount, loanTerm);
+            } else if (loanType === 'product') {
+                if (loanTerm < 1 || loanTerm > 6) {
+                    resultDiv.textContent = "For Product Loan, the term must be between 1 and 6 months.";
+                    return;
+                }
+                result = calculateProductLoan(loanAmount, loanTerm);
+            }
+
+            resultDiv.textContent = `Total Repayment: PHP ${result.totalRepayment.toFixed(2)} | ` +
+                `Semi-Monthly Payment: PHP ${result.semiMonthlyPayment?.toFixed(2) || result.monthlyPayment.toFixed(2)}`;
+        });
     </script>
 </body>
 </html>
