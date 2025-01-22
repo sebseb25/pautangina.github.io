@@ -186,6 +186,11 @@
                 if (loanTerm < 1 || loanTerm > 6) {
                     resultDiv.textContent = "For Product Loan, the term must be between 1 and 6 months.";
                     return;
+                
+                if (loanAmount < 50000 || loanAmount < 10000) (
+                    resultDiv.textContent = "Maximum loanable amount is Php 50,000, minimum is Php 10,000.";
+                    return;
+                    
                 }
 
                 result = calculateProductLoan(loanAmount, loanTerm);
